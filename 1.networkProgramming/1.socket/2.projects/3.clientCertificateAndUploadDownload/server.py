@@ -30,7 +30,6 @@ class MyServer(socketserver.BaseRequestHandler):
             else:
                 break
 
-
     def user_verify(self, conn):
         rand = os.urandom(32)
         conn.send(rand)
@@ -55,7 +54,6 @@ class MyServer(socketserver.BaseRequestHandler):
                 self.upload_download_service(conn)
             except Exception as err:
                 self.logger.error(err)
-
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
