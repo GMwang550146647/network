@@ -1,7 +1,9 @@
 from multiprocessing import Process, Lock
 import json
 import time
-
+"""
+进程锁
+"""
 
 def search_ticket(i):
     with open("4.shared_data.json") as f:

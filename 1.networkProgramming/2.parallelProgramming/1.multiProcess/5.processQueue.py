@@ -1,7 +1,8 @@
 from multiprocessing import Queue,Process
 import time
 """
-Queue： 进程共享数据
+Queue： 安全，加锁进程共享数据
+Pipe:  不安全，不加锁
 """
 def func_put(q,name='put_func'):
     msg="hello"

@@ -14,7 +14,7 @@ def fun1():
     while True:
         t += 1
         time.sleep(1)
-        print("In fun1, waited for {} s".format(t))
+        print("In daemon fun1, still alive waited for {} s".format(t))
 
 
 def fun2():

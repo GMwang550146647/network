@@ -2,7 +2,9 @@ import os
 import time
 from multiprocessing import Process
 
-
+"""
+自定义 进程类
+"""
 class MyProcess(Process):
     def __init__(self, argv):
         super().__init__()
