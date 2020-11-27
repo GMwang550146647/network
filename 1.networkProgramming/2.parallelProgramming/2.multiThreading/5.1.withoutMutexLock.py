@@ -38,7 +38,7 @@ def sub():
         n -= 1
         if not p:
             time.sleep(0.00000000001)  # 强制线程轮转
-        p.pop()
+        p.pop()  # 这里因为有可能两个线程同时pop，但是len(p)==1，这个时候报错，当只有一个线程的时候就不会
 
 
 if __name__ == '__main__':

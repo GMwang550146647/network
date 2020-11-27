@@ -2,7 +2,10 @@ from multiprocessing import Queue,Process
 import time
 """
 Queue： 安全，加锁进程共享数据
+    基于  管道pipe+锁lock
 Pipe:  不安全，不加锁
+    基于  文件级别的socket+pickle
+    
 """
 def func_put(q,name='put_func'):
     msg="hello"
