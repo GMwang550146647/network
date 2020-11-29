@@ -39,6 +39,9 @@ if __name__ == '__main__':
                   alias mysqladmin=/usr/local/mysql/bin/mysqladmin
         4.具体的配置文件（可以自行更改）
             cat /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist
+            
+        5.登录数据库 
+            mysql -u root -p
     """
 
     """
