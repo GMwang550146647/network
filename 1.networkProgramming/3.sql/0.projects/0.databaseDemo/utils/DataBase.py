@@ -4,15 +4,15 @@ import mysql.connector
 from mysql.connector import errorcode
 from datetime import date, datetime, timedelta
 import re
-from configs import DB_NAME, TABLES
+from .configs import DB_NAME, TABLES
 
-
+PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 class DataBase():
     def __init__(self, user_name="root"):
         self.user_name = user_name
         self.cursor = None
         self.cnx = None
-        self.data_dir = '../data'
+        self.data_dir = os.path.join(PROJECT_PATH,'data')
         self.file_list = [
             "load_employees.dump", "load_titles.dump", "load_departments.dump",
             "load_salaries.dump", "load_dept_emp.dump", "load_dept_manager.dump"
@@ -129,7 +129,7 @@ class DataBase():
         # 5.查询数据
         self.query_data()
         # 6.删除全部表格
-        # self.drop_database(DB_NAME)
+        self.drop_database(DB_NAME)
 
 
 if __name__ == '__main__':
