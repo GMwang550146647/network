@@ -5,9 +5,14 @@
 协程
     操作系统不可见
     本质是一个线程，多个任务在一个线程上面来回切换，来切换IO操作，达到在一条线程中的io操作降到最低的目的
+    -> 爬虫的模块大部分都是基于协程实现的，flask框架/sanic框架
+
 切换并规避io的两个模块
-    gevent 利用了greenlet 底层模块完成切换+自动规避io功能
+    gevent 利用了greenlet 底层模块完成切换+自动规避io功能(有限)
+        ->第三方模块
+        from gevent import monkey; monkey.patch_all()
     asyncio 利用了yield 底层语法完成的切换+自动规避io功能
+        ->内置模块
         tornado异步的web框架
         yield from 更好实现协程
         send 更好地实现协程
@@ -21,6 +26,8 @@
     协程  数据共享    数据安全    用户级别          更小    不能
 用户级别的协程，好处
     减少操作系统负担
+
+
 
 """
 
