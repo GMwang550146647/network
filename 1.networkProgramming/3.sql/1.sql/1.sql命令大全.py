@@ -26,7 +26,31 @@ sql基本命令
         grant all
         grant select
         grant select, insert
-    2.3.查看某用户权限
+    2.3.创建并赋权
+        grant all on *.* to 'USER_NAME'@'192.168.31.%' identified by 'PASSWORD';
+    2.4.查看某用户权限
         show grants for 'USER_NAME'@'192.168.31.%';
             例如  grant all on employees.*  to 'gmwang'@'192.168.31.%';
+    2.5.删除用户
+        drop user 'USER_NAME'@'192.168.31.%';
+"""
+"""
+数据库操作
+1.操作数据库(DCL) CONTROL
+    查看所有数据库 show databases;
+    创建数据库    create database 数据库名字;
+    切换到某数据库 use 数据库名字;
+    查看某数据库的表 show tables;
+    删除数据库     drop database 数据库名字;
+
+2.表操作(DDL)   DEFINE
+    创建表格    create table 表名(字段1 type1, 字段2 type2...)
+    查看表结构   desc 表名; -> describe 表名;
+    删除表      drop table 表名;
+
+3.表内容操作(DML) MANAGEMENT
+    插入(增）  insert into 表名 values (xxx,xxx,xxx...)
+    删除(删)  delete from student where columni= 'xxx';
+    修改(改)  update student set columni=xxx,columnj=xxx where columnj='xxx';
+    查询(查)  select * from 表名;
 """
