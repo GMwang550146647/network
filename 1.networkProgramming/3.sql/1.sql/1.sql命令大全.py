@@ -34,6 +34,7 @@ sql基本命令
     2.5.删除用户
         drop user 'USER_NAME'@'192.168.31.%';
 """
+
 """
 数据库操作
 1.操作数据库(DCL) CONTROL
