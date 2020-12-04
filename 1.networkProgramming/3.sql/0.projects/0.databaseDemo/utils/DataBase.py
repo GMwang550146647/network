@@ -13,6 +13,7 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 增删改 要commit才会有生效
 """
 
+
 class DataBase():
     def __init__(self, user_name="root", password="gmwang"):
         self._user_name = user_name
@@ -125,8 +126,26 @@ class DataBase():
                 self._cnx.commit()
             except Exception as err:
                 print(err)
-                #回滚
+                # 回滚
                 self._cnx.rollback()
+
+    def update_data(self):
+        """
+        事务！ commit 是保证事务安全的措施 ，insert,delete,update 都需要commit，这样能保证事务性！
+        :return:
+        """
+        # 1.修改员工工资,但是这个是要先查询再更改，所以要进行事务加锁
+        query = "SELECT * from salaries where emp_no=10011 for update"
+        self._cursor.execute(query)
+        emp_no, salary, _, _ = self._cursor.fetchone()
+        add_salary = ("UPDATE salaries SET "
+                      "salary =%(salary)s WHERE emp_no=%(emp_no)s")
+        data_salary = {
+            'emp_no': emp_no,
+            'salary': salary + 1,
+        }
+        self._cursor.execute(add_salary, data_salary)
+        self._cnx.commit()
 
     def query_data(self):
         query = ("SELECT first_name, last_name, hire_date FROM employees "
