@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function myFunction2() {
+            document.getElementById("demo2").innerHTML = "2.javascript也可以写在head中";
+        }
+    </script>
+    <script src="./2.myScript.js"></script>
+    <script src="python类/1.networkProgramming/4.html/1.前端/2.javascript/1.基本语法/2.myScript.js"></script>
+</head>
+<body>
+<div id="demo1">1.javascript可以写在body中，没有函数包裹的会自动执行，但是要用&ltscript&gt包裹着啊！</div>
+<div id="demo2">2.javascript也可以写在head中，可以用函数包裹着，但是要触发执行，但是还是要用&ltscript&gt包裹着啊！</div>
+<button type="button" onclick="myFunction2()">触发demo2的修改</button>
+<p id="demo3">3.javascript的函数也可以写在body中，但是一般放在body的最下面比较好，这样能让页面更快显示，因为脚本编译耗时</p>
+<button type="button" onclick="myFunction3()">触发demo3的修改</button>
+<p id="demo4">4.javascript的函数也可以写在html文件外，在script的src属性中写入js文件位置就行了。因为可能其他html文件也会用到，这样就比较方便快捷了，导入的时候放在哪里都行</p>
+<button type="button" onclick="myFunction4()">触发demo4的修改</button>
+<p id="demo5">5.javascript的函数也可以写在html文件外，在script的src属性中写入js文件位置就行了，这个src也可以是url，可以是相对位置,也可以是绝对位置</p>
+<button type="button" onclick="myFunction5()">触发demo5的修改</button>
+
+
+<script>
+function myFunction3() {
+    document.getElementById("demo3").innerHTML = "3.javascript的函数也可以写在body中";
+}
+</script>
+<script>
+document.getElementById("demo1").innerHTML = "1.javascript可以写在body中，没有函数包裹的会自动执行，但是要用&ltscript&gt包裹着";
+</script>
+</body>
+</html>
