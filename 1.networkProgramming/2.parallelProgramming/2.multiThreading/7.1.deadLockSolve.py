@@ -1,4 +1,4 @@
-# from threading import Thread, Lock
+
 from threading import Thread, RLock
 
 """
@@ -38,7 +38,7 @@ def eat2(name, noodle_lock, fork_lock):
 
 
 if __name__ == '__main__':
-    fork_lock=noodle_lock = Lock()
+    fork_lock=noodle_lock = RLock()
     t_list = []
     func_list = [eat1] * 20 + [eat2] * 20
     for i in range(len(func_list)):

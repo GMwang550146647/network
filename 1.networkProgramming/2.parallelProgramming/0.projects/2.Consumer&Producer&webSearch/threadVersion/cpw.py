@@ -23,7 +23,7 @@ if __name__ == '__main__':
         'baidu': "http://www.baidu.com",
         'bili': "https://www.bilibili.com",
         'aiqiyi': 'https://www.iqiyi.com',
-        'google': 'https://www.google.com.hk/webhp?hl=zh-CN&sourceid=cnhp',
+        # 'google': 'https://www.google.com.hk/webhp?hl=zh-CN&sourceid=cnhp',
     }
     dir = "data"
     os.makedirs(dir, exist_ok=True)

@@ -1,6 +1,5 @@
 from threading import Thread, Lock
 from threading import Thread, RLock as Lock
-
 """
 死锁出现的核心原因
     多把锁，多个线程之间，交叉使用
@@ -40,7 +39,7 @@ if __name__ == '__main__':
     noodle_lock = Lock()
     fork_lock = Lock()
     t_list = []
-    func_list = [eat1] * 20 + [eat2] * 20
+    func_list = [eat1] * 200 + [eat2] * 20
     for i in range(len(func_list)):
         t = Thread(target=func_list[i], args=(i, noodle_lock, fork_lock))
         t_list.append(t)
