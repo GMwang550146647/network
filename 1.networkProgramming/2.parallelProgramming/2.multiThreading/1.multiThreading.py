@@ -9,25 +9,26 @@
     # 3.active_count 返回活着的线程数量
 """
 from threading import Thread, current_thread, enumerate, active_count
-# from multiprocessing import Process as Thread
+from multiprocessing import Process as Thread
 import time
 import os
 
 
 def func(i):
     # 1.current_thread()  返回当前线程的对象， ident->其id
-    print("current thread:{}  ->start{}".format(current_thread().ident, i))
+    print("current thread:{}  ->start  {}".format(current_thread().ident, i))
     time.sleep(1)
-    print("current thread:{}  ->end{}".format(current_thread(), i))
+    print("current thread:{}  ->end  {}".format(current_thread(), i))
 
 
 if __name__ == '__main__':
     t_list = []
-    for i in range(10):
+    for i in range(100000000):
         ti = Thread(target=func, args=(i + 1,))
         ti.start()
         print("Thread {} -> tid:{} pid:{} ppid:{}".format(i, ti.ident, os.getpid(), os.getppid()))
         t_list.append(ti)
+    print("All Threads activated!")
     # 2.enumerate() 返回所有活着的线程
     print(enumerate())
     # 3.active_count 返回活着的线程数量
