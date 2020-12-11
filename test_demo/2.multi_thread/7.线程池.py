@@ -30,6 +30,10 @@ from multiprocessing import Queue
 import time
 import random
 
+def time_it(func, args):
+    now = time.time()
+    func(**args)
+    return time.time() - now
 
 class ThreadPoolRun():
     def __init__(self):
@@ -90,5 +94,7 @@ if __name__ == '__main__':
     # ThreadPoolRun().run(n_threads=2, n_tasks=10, t=1)
 
     #2.正序与乱序返回
-    # ThreadPoolRun().run(n_threads=2, n_tasks=10)
-    ThreadRun().run(n_threads=2, n_tasks=10)
+    t1=time_it(ThreadPoolRun().run,{'n_threads':200,'n_tasks':1000})
+    t2=time_it(ThreadRun().run,{'n_threads':200,'n_tasks':1000})
+    print("ThreadPoolRun: {} s".format(t1))
+    print("ThreadRun: {} s".format(t2))
