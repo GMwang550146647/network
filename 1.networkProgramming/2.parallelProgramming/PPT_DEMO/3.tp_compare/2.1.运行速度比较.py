@@ -36,11 +36,11 @@ if __name__ == '__main__':
     print("Thread: {}s".format(t_thread))
     print("________________THIS IS A SEPARATION LINE________________")
     # 1.2.速度比较
-    t_process = time_it(func=CalFib().multi_processing_map, args={'n_task': 60, 'depth': 10})
-    t_thread = time_it(func=CalFib().multi_threading_map, args={'n_task': 60, 'depth': 10})
+    t_process = time_it(func=CalFib().multi_processing_map, args={'n_task': 600, 'depth': 10})
+    t_thread = time_it(func=CalFib().multi_threading_map, args={'n_task': 600, 'depth': 10})
     print("Process: {}s".format(t_process))
     print("Thread: {}s".format(t_thread))
     print("________________THIS IS A SEPARATION LINE________________")
     # 2.查看 是否使用多核
     # CalFib().multi_processing_map()
-    # CalFib().multi_threading_map()
+    CalFib().multi_threading_map()

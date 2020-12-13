@@ -71,7 +71,7 @@ class RunList():
     def sub(self):
         for i in range(300000):
             if not self.p:
-                time.sleep(0.00000000000000001)  # 强制线程轮转
+                time.sleep(0.0000001)  # 强制线程轮转
                 # time.sleep(0.0000001)  # 强制线程轮转
             self.p.pop()  # 这里因为有可能两个线程同时pop，但是len(p)==1，这个时候报错，当只有一个线程的时候就不会
 
