@@ -11,6 +11,6 @@ def fib(n):
 import time
 if __name__ == '__main__':
     t_start=time.time()
-    result=fib(35)
+    result=fib(30)
     duration=time.time()-t_start
-    print("using {}s result: {}".format(duration,result))
+    print("using {}ms result: {}".format(round(duration*1000,3),result))
