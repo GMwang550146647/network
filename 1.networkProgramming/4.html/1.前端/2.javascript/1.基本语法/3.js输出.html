@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function Func1(){
+            window.alert('1.使用window.alert()写入警告框');
+        }
+        function Func2(){
+            document.write('2.使用 document.write() 写入 HTML 输出');
+        }
+        function Func3(){
+            document.getElementById('demo3').innerHTML='<div>!!!3.使用 innerHTML 写入 HTML 元素!!!!!</div>';
+        }
+        function Func4(){
+            console.log("4.console.log() 写入浏览器控制台");
+        }
+    </script>
+</head>
+<body>
+<div id="demo1">1.使用window.alert()写入警告框</div>
+<button type="button1" onclick="Func1()">change demo1</button>
+<div id="demo2">2.使用 document.write() 写入 HTML 输出</div>
+<button type="button2" onclick="Func2()">change demo2</button>
+<div id="demo3">3.使用 innerHTML 写入 HTML 元素</div>
+<button type="button3" onclick="Func3()">change demo3</button>
+<div id="demo4">4.console.log() 写入浏览器控制台</div>
+<button type="button4" onclick="Func4()">change demo4</button>
+
+</body>
+</html>
