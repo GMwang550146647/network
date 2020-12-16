@@ -1,7 +1,7 @@
 import threading,time
 class Run():
     def __init__(self):
-        self.semaphore=threading.BoundedSemaphore(6)  # 声明semaphore实例，每次允许6个线程同时运行
+        self.semaphore=threading.BoundedSemaphore(2)  # 声明semaphore实例，每次允许6个线程同时运行
 
     def func_safe(self,n):
         with self.semaphore:
