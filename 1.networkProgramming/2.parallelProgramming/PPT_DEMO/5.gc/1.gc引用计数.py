@@ -3,11 +3,12 @@ import gc
 import sys
 
 
-def test_counter():
+def counter():
     class Test():
         def __init__(self):
             pass
 
+    gc.set_debug(gc.DEBUG_COLLECTABLE | gc.DEBUG_UNCOLLECTABLE)
     recur_t = Test()
     k = recur_t
     recur_t._self = recur_t
@@ -18,7 +19,8 @@ def test_counter():
     del k
     print("After del k recur_t count: ",sys.getrefcount(recur_t) - 1)
     del recur_t
+    print('gabage:{}'.format(gc.garbage))
     print(gc.collect())
 
 if __name__ == '__main__':
-    test_counter()
+    counter()
