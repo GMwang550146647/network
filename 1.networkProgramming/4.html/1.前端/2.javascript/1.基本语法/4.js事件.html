@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        <script>
+        function Func1(){
+            document.getElementById('demo1').innerHTML="1.ONCLICK：点击元素会发生的事情"+Date();
+        }
+        function Func21(){
+            document.getElementById('demo2').innerText="2.1.MOUSEOVER:当鼠标到这里的时候会触发";
+        }
+        function Func22(){
+            document.getElementById('demo2').innerText="2.1.MOUSEOUT:当鼠标离开到这里的时候会触发";
+        }
+        function Func3(){
+            document.getElementById('demo3').innerHTML='<div>!!!3.onload: 当页面已经完全加载，就会改变!!!!!</div>';
+        }
+        function Func4(event,value){
+            console.log(event)
+            if (event.key==="Enter") {
+                document.getElementById('demo4').innerHTML = '4.onkeydown: 当用户按下键盘按键,我就会改变了'+value;
+            }
+        }
+        function Func5(){
+            document.getElementById('demo5').innerHTML='<div>5.ONCHANGE: 当内容被修改的时候，我就会变化</div>';
+        }
+    </script>
+</head>
+<body>
+<div id="demo1">1.onclick：点击元素会发生的事情</div>
+<button type="button1" onclick="Func1()">change demo1</button>
+<div id="demo2">2.使用 document.write() 写入 HTML 输出</div>
+<button type="button2" onmouseover="Func21()" onmouseout="Func22()">2.mouseover 与 mouseout</button>
+<div id="demo3">3.onload: 当页面已经完全加载，就会改变</div>
+<img src="files/test.png" alt="" onload="Func3()" height="200" width="200">
+<div id="demo4">4.onkeydown: 当用户按下键盘按键</div>
+change demo4<input type="input4" onkeydown="Func4(event,this.value)"></input>
+<div id="demo5">5.onchange: 当内容被修改的时候，我就会变化</div>
+change demo5<input type="input5" onchange="Func5()"></input>
+</body>
+</html>
