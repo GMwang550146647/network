@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        // 1.对象定义（单个对象）
+        var person={
+            firstName: "GM",
+            lastName: "Wang",
+            identity: 550146647,
+            fullName: function (){
+                return this.firstName+' '+this.lastName
+            },
+            listAllAttr : function (){
+                for (attri in this){
+                    document.getElementById(attri).innerText=attri + ":" +this[attri];
+                }
+            },
+            //2.对象访问器：get, set （作用：令函数像对象一样使用）
+            get bigName(){
+                return this.firstName.toUpperCase()+' '+this.lastName.toUpperCase()
+            },
+            set bigName(bigName){
+                this.firstName=bigName.split(" ")[0];
+                this.lastName=bigName.split(" ")[1];
+            }
+        }
+        function myfunc2(){
+            person.bigName="Wang GM";
+            document.getElementById('demo2').innerText=person.bigName;
+        }
+        //3.对象构造器
+        function PersonClass(first,last,id){
+            this.firstName=first;
+            this.lastName=last;
+            this.identity=id;
+            this.listAllAttr = function (){
+                for (attri in this){
+                    document.getElementById(attri).innerText=attri + ":" +this[attri];
+                }
+            };
+        }
+        function changePerson(){
+            var p1=new PersonClass("猪","籽",290830809);
+            document.getElementById('demo1').onclick=p1.listAllAttr();
+        }
+        //4.对象构建之后，还想为对象添加属性使用prototype属性
+        PersonClass.prototype.fullName=function (){
+                return this.firstName+' '+this.lastName
+        };
+    </script>
+</head>
+<body>
+    <div id='demo1' onclick="person.listAllAttr()">1.创建对象</div>
+    <div id="firstName"></div>
+    <div id="lastName"></div>
+    <div id="identity"></div>
+    <div id="fullName"></div>
+    <div id="listAllAttr"></div>
+    <div id="bigName"></div>
+    <div onclick="myfunc2()">2.改变对象属性</div>
+    <div id="demo2"></div>
+    <div onclick="changePerson()">3.创建一个新人，回去再按按第一条看看</div>
+
+</body>
+</html>
