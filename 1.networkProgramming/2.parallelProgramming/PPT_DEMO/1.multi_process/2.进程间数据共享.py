@@ -41,7 +41,7 @@ class ShareDataUsingFile():
             p_list.append(p)
         [p.join() for p in p_list]
         n_tickets_now = self.search_ticket()
-        print("ShareDataUsingFile No Lock: After Buy {} times-> Reduce from {} to {} -> {}"
+        print("ShareDataUsingFile With Lock: After Buy {} times-> Reduce from {} to {} -> {}"
               .format(n, n_tickets, n_tickets_now, n_tickets - n_tickets_now))
 
     def buy_ticket_multi(self, n=100):
@@ -53,7 +53,7 @@ class ShareDataUsingFile():
             p_list.append(p)
         [p.join() for p in p_list]
         n_tickets_now = self.search_ticket()
-        print("ShareDataUsingFile With Lock: After Buy {} times-> Reduce from {} to {} -> {}"
+        print("ShareDataUsingFile No Lock: After Buy {} times-> Reduce from {} to {} -> {}"
               .format(n, n_tickets, n_tickets_now, n_tickets - n_tickets_now))
 
     def run(self, n=100):

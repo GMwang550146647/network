@@ -27,7 +27,7 @@ class Run():
             t2.start()
         [ti.join() for ti in add_threads]
         [ti.join() for ti in sub_threads]
-        print("RunList: {}".format(self.a))
+        print("Run: {}".format(self.a))
 
 
 class MutexLockRun():

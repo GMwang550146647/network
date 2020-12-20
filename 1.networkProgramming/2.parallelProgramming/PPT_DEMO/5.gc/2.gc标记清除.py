@@ -28,4 +28,5 @@ class LabelRemoveRun():
         self.label_remove_success()
 
 if __name__ == '__main__':
+    # gc.set_debug(gc.DEBUG_COLLECTABLE | gc.DEBUG_UNCOLLECTABLE)
     LabelRemoveRun().run()

@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # ThreadPoolRun().run(n_threads=2, n_tasks=10, t=1)
 
     #2.正序与乱序返回
-    t1=time_it(ThreadPoolRun().run,{'n_threads':200,'n_tasks':1000})
-    t2=time_it(ThreadRun().run,{'n_threads':200,'n_tasks':1000})
+    t1=time_it(ThreadPoolRun().run,{'n_threads':10,'n_tasks':10})
+    t2=time_it(ThreadRun().run,{'n_threads':10,'n_tasks':10})
     print("ThreadPoolRun: {} s".format(t1))
     print("ThreadRun: {} s".format(t2))

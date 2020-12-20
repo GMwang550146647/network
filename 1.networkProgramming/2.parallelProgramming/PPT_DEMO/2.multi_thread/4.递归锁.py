@@ -5,8 +5,8 @@
           3.递归锁能解决互斥锁死锁现象！
 """
 
-from threading import RLock as Lock, Thread # RLock
-# from threading import Lock, Thread  # Lock
+# from threading import RLock as Lock, Thread # RLock
+from threading import Lock, Thread  # Lock
 
 
 
