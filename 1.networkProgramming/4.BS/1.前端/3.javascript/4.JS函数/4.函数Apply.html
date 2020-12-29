@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        // 1.Apply ：
+        function demo1() {
+            var person = {
+                fullName: function() {
+                    return this.firstName + " " + this.lastName;
+                }
+            }
+            var person1 = {
+                firstName:"Bill",
+                lastName: "Gates"
+            }
+            var person2 = {
+                firstName:"Steve",
+                lastName: "Jobs"
+            }
+            var x = person.fullName.apply(person1);
+            document.getElementById("demo1").innerHTML = x;
+        }
+        function demo2(){
+            var person = {
+                fullName: function(city, country) {
+                    return this.firstName + " " + this.lastName + "," + city + "," + country;
+                }
+            }
+            var person1 = {
+                firstName:"Bill",
+                lastName: "Gates"
+            }
+            var x=person.fullName.apply(person1, ["Seattle", "USA"]);
+            document.getElementById("demo2").innerHTML = x;
+        }
+        // 2.Apply
+
+    </script>
+</head>
+<body>
+    <h1>Apply()</h1>
+    <p onclick="demo1()">此例调用 person 的 fullName 方法，在 person1 上使用它：</p>
+    <p id="demo1">hello</p>
+    <h1>Apply() 带参数</h1>
+    <p onclick="demo2()">apply 与 call 的区别在于apply接收list参数</p>
+    <p id="demo2">hello</p>
+
+</body>
+</html>

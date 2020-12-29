@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="test.css">
-    <link rel="icon" href="wechat.ico">
+    <link rel="stylesheet" href="css/test.css">
+    <link rel="icon" href="src/test.gif">
     <!--直接写在html页面里面的css样式是直接可以在浏览器上显示的-->
-    <!--<style>-->
-        <!--h1{-->
-            <!--background-color: green;-->
-            <!--color: white;-->
-        <!--}-->
-    <!--</style>-->
+<!--    <style>-->
+<!--        h1{-->
+<!--            background-color: green;-->
+<!--            color: white;-->
+<!--        }-->
+<!--    </style>-->
 </head>
 <body>
 
 <h1>这是一个测试文件</h1>
 <!--直接写在html页面里面的img标签的src属性值如果是别人网站的地址（网络地址）是直接可以在浏览器上显示的-->
 <!--<img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1550395461724&di=c2b971db12eef5d85aba410d1e2e8568&imgtype=0&src=http%3A%2F%2Fy0.ifengimg.com%2Fifengimcp%2Fpic%2F20140822%2Fd69e0188b714ee789e97_size87_w800_h1227.jpg" alt="">--> <!--如果都是网络地址，那么只要你的电脑有网，就可以看到，不需要自己在后端写对应的读取文件，返回图片文件信息的代码，因为别人的网站就做了这个事情了-->
-<img src="meinv.png" alt="" width="100" height="100"> <!--如果你是本地的图片想要返回给页面，你需要对页面上的关于这个图片的请求要自己做出响应，这个src就是来你本地请求这个图片，你只要将图片信息读取出来，返回给页面，页面拿到这个图片的数据，就能够渲染出来了，是不是很简单-->
+<img src="src/test.gif" alt=""> <!--如果你是本地的图片想要返回给页面，你需要对页面上的关于这个图片的请求要自己做出响应，这个src就是来你本地请求这个图片，你只要将图片信息读取出来，返回给页面，页面拿到这个图片的数据，就能够渲染出来了，是不是很简单-->
 
+<script src="js/test.js"></script>
 <!--直接写在html页面里面的js操作是直接可以在浏览器上显示的-->
 <!--<script>-->
     <!--alert('这是我们第一个网页')-->
 <!--</script>-->
 
-<script src="test.js"></script>
 </body>
 </html>

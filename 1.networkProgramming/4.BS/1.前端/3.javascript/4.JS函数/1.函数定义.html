@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        // 1.函数定义：
+        // 1.1.函数声明
+        function multiply(a,b){
+            return a*b
+        }
+        //1.2.函数表达式(匿名函数：只能用一次）
+        var add=function(a,b){return a+b}
+        function change(func) {
+            var a=Number(document.getElementById('nb1').value);
+            var b=Number(document.getElementById('nb2').value);
+            if (func=='add'){
+                document.getElementById('demo1').innerText=add(a,b);
+            }
+            else if (func=="multiply"){
+                document.getElementById('demo1').innerText=multiply(a,b);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div onclick="change()">1.函数定义</div>
+    <div id ="demo1"></div>
+    <div>
+        <input type="number" id="nb1" value=3>
+        <input type="number" id="nb2" value=4>
+        <label><input type="radio" name="func" value=multiply checked onclick=change(this.value)>Multiply</label>
+        <label><input type="radio" name="func" value=add onclick="change(this.value)">Add</label>
+    </div>
+</body>
+</html>

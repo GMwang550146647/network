@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Bootstrap 实例 - 水平表单</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../css/test.css">
+    <link rel="icon" href="../src/test.gif">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-2">
+            <img src="../src/test.gif" alt="">
+        </div>
+    </div>
+    <div class="row">
+                <form class="form-horizontal" role="form" action="http://127.0.0.1:8080/auth/" method="get">
+            <div class="form-group">
+                <label for="username" class="col-sm-2 control-label">Username</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="username"
+                           placeholder="请输入名字">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-sm-2 control-label">Password</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="password"
+                           placeholder="请输入姓名">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Remember Me!
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                    <button type="submit" class="btn btn-default">Login</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script src="../js/test.js"></script>
+</body>
+</html>
