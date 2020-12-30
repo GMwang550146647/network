@@ -20,7 +20,7 @@ while True:
 
     # 下面这句就是按照http协议来写的
     conn.send(b'HTTP/1.1 200 ok \r\n\r\n')
-    with open('../0.data/html/test_myServer.html', 'r') as f:
+    with open('../0.data/html/socket_test_myServer.html', 'r') as f:
         content = f.read().encode()
     conn.send(content)
     # 2.无连接，无状态保存

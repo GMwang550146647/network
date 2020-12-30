@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Bootstrap 实例 - 滚动监听（Scrollspy）插件</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="page-header">
+                    <h1>
+                        Information Collection <small>Totally 3 pages</small>
+                    </h1>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="progress">
+                    <div id='pbar' class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 33.33%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Basic Information
+                        </h3>
+                    </div>
+                    <form role="form"  id="informations">
+                        <div class="panel-body">
+                            <div id="myCarousel" class="carousel slide">
+                                <!-- 轮播（Carousel）项目 -->
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <div class="col-md-8  col-md-offset-2">
+                                            <div id="form1">
+                                                <div class="form-group">
+                                                     <label for="name">Name</label><input type="text" class="form-control" id="name"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="phone">Phone</label><input type="text" class="form-control" id="phone"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="email">Email</label><input type="email" class="form-control" id="email"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="password">Name</label><input type="password" class="form-control" id="password"/>
+                                                </div>
+
+                                                <div class="form-group form-inline">
+                                                     <label for="exampleInputFile">Photo</label><input type="file" id="exampleInputFile" />
+                                                    <p class="help-block">
+                                                        Only png, jpg, gif formats are supported!
+                                                    </p>
+                                                </div>
+
+                                                <br><label>Attribute</label>
+                                                <div class="form-group form-inline">
+                                                    <input type="radio" class="form-control" id="badguy" name="attribute"/><label for="badguy">Good Guy</label>
+                                                </div>
+                                                <div class="form-group form-inline align-middle">
+                                                    <input type="radio" class="form-control" id="goodguy" name="attribute"/><label for="goodguy" >Bad Guy</label>
+                                                </div>
+                                                <div class="form-group form-inline">
+                                                    <input type="radio" class="form-control" id="notguy" name="attribute"/><label for="notguy">Not A Man</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="item">
+                                        <div class="col-md-8  col-md-offset-2">
+                                            <div id="form2">
+                                                <div class="form-group">
+                                                     <label for="name2">Name</label><input type="text" class="form-control" id="name2"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="phone2">Phone</label><input type="text" class="form-control" id="phone2"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="email2">Email</label><input type="email" class="form-control" id="email2"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="password2">Name</label><input type="password" class="form-control" id="password2"/>
+                                                </div>
+
+                                                <div class="form-group form-inline">
+                                                     <label for="exampleInputFile2">Photo</label><input type="file" id="exampleInputFile2" />
+                                                    <p class="help-block">
+                                                        Only png, jpg, gif formats are supported!
+                                                    </p>
+                                                </div>
+
+                                                <br><label>Attribute</label>
+                                                <div class="form-group form-inline">
+                                                    <input type="radio" class="form-control" id="badguy2" name="attribute"/><label for="badguy2">Good Guy</label>
+                                                </div>
+                                                <div class="form-group form-inline align-middle">
+                                                    <input type="radio" class="form-control" id="goodguy2" name="attribute"/><label for="goodguy2" >Bad Guy</label>
+                                                </div>
+                                                <div class="form-group form-inline">
+                                                    <input type="radio" class="form-control" id="notguy2" name="attribute"/><label for="notguy2">Not A Man</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="col-md-8  col-md-offset-2">
+                                            <div id="form3">
+                                                <div class="form-group">
+                                                     <label for="name3">Name</label><input type="text" class="form-control" id="name3" name="name3"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="phone3">Phone</label><input type="text" class="form-control" id="phone3" name="phone3"/>
+                                                </div>
+                                                <div class="form-group">
+                                                     <label for="email3">Email</label><input type="email" class="form-control" id="email3" name="email3"/>
+                                                </div>
+                                                <div class="form-group3">
+                                                     <label for="password">Name</label><input type="password" class="form-control" id="password3" name="password3"/>
+                                                </div>
+
+                                                <div class="form-group form-inline">
+                                                     <label for="exampleInputFile3">Photo</label><input type="file" id="exampleInputFile3" />
+                                                    <p class="help-block">
+                                                        Only png, jpg, gif formats are supported!
+                                                    </p>
+                                                </div>
+
+                                                <br><label>Attribute</label>
+                                                <div class="form-group form-inline">
+                                                    <input type="radio" class="form-control" id="badguy3" name="attribute"/><label for="badguy3">Good Guy</label>
+                                                </div>
+                                                <div class="form-group form-inline align-middle">
+                                                    <input type="radio" class="form-control" id="goodguy3" name="attribute"/><label for="goodguy3" >Bad Guy</label>
+                                                </div>
+                                                <div class="form-group form-inline">
+                                                    <input type="radio" class="form-control" id="notguy3" name="attribute"/><label for="notguy3">Not A Man</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-2 column">
+            </div>
+            <div class="col-md-6 column">
+            </div>
+            <div class="col-md-4 column">
+                 <button id='commit_button' type="button" class="btn btn-success btn-lg btn-block">Next Step</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $("#commit_button").click(function () {
+        current_id=Number($("div").filter('.item').filter('.active').children().children().attr('id').slice(-1))+1
+        $("#myCarousel").carousel('next');
+        $('#pbar').css("width",String(33.33*current_id)+"%")
+
+        if (current_id===4){
+            document.getElementById('informations').submit()
+        }
+
+    })
+</script>
+</body>
+</html>
