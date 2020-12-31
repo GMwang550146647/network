@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body{
+            background-image: url("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2851728749,2343107280&fm=11&gp=0.jpg");
+        }
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4"><h4>当前时间:{{ ctime }}</h4></div>
+</div>
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4"><h4>登录状态:{{ flag }}</h4></div>
+</div>
+<form class="form-horizontal" role="form">
+    <div class="row form-group">
+        <label for="username" class="col-sm-3 control-label">Username:</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+        </div>
+    </div>
+    <div class="row form-group">
+        <label for="password" class="col-sm-3 control-label">Password:</label>
+        <div class="col-sm-6">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-sm-3 control-label">Normal?:</label>
+        <label class="radio-inline">
+            <input type="radio" name="normal" id="normal1" value="yes" checked> Yes
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="normal" id="normal2" value="no"> No
+        </label>
+    </div>
+    <div class="row form-group">
+        <label class="col-sm-3 control-label">Hobby:</label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="hobby1" name='hobby' value="java"> JAVA
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="hobby2" name='hobby' value="python"> PYTHON
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="hobby3" name='hobby' value="c++"> C++
+        </label>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <button type="submit" class="btn btn-default">Login</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

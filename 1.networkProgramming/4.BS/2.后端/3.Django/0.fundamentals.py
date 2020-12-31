@@ -8,7 +8,7 @@
     2.模板(Template)：负责如何把页面展示给用户(html)。
     3.视图(View)：    负责业务逻辑，并在适当时候调用Model和Template。
 
-3.Django
+3.Django  手动创建
     1.主项目
         1.1.创建目录架构
             创建：django-admin startproject mysite
@@ -22,7 +22,7 @@
             │   ├── urls.py           负责把URL模式映射到应用程序
             │   └── wsgi.py           runserver命令就使用wsgiref模块做简单的web server，后面会看到renserver命令，所有与socket相关的内容都在这个文件里面了，目前不需要关注它。
             └── manage.py             Django项目里面的工具，通过它可以调用django shell和数据库，启动关闭项目与项目交互等，不管你将框架分了几个文件，必然有一个启动文件，其实他们本身就是一个文件。
-    2.应用程序
+    2.应用程序（注意：还要在setting那里设置app才能起作用）
         1.1.创建应用程序目录架构
             创建： python manage.py startapp app
 
