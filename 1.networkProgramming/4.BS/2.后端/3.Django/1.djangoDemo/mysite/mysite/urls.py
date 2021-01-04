@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('^login/', views.login),  # 只要这个正则match 就会执行这里
     path('signup/', views.signup),  # 只要这个正则match 就会执行这里
+    path('database/',views.database)
 ]
