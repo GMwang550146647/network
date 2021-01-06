@@ -24,8 +24,10 @@ urlpatterns = [
     path('signup/', views.signup),
     path('database/', views.database),
     path('request/', views.request),
+
     # 2.正则路由，正则匹配
-    re_path('^login/.*', views.login),  # 只要这个正则match 就会执行这里
+    re_path('^login/', views.login),  # 只要这个正则match 就会执行这里
+    re_path('^login1/', views.Login.as_view()),  # 只要这个正则match 就会执行这里
     # url('^login/.*', views.login),  # 只要这个正则match 就会执行这里
 
     # 3.无名路由 :传入的参数要按顺序，index1有三个参数 ： request, m,n

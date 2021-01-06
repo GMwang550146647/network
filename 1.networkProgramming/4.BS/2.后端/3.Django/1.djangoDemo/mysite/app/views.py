@@ -4,8 +4,21 @@ import logging
 from django.shortcuts import render, HttpResponse, redirect
 from .models import sql_api_template, user_add, user_login
 from django.views import View
+from django.utils.decorators import method_decorator
+
 # Create your views here.
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
+
+
+def my_decorator(func):
+    def wrapper(*args, **kwargs):
+        logging.warning("请求前....")
+        ret = func(*args, **kwargs)
+        logging.warning("请求后....")
+        return ret
+
+    return wrapper
+
 
 """
 
@@ -41,7 +54,9 @@ def request(request):
     return HttpResponse(tempt_str)
 
 
+@my_decorator
 def login(request):
+    logging.warning("Logining")
     login_success = False
     now = datetime.datetime.now()
     ctime = now.strftime("%Y-%m-%d %X")
@@ -67,6 +82,41 @@ def login(request):
     }
     # return HttpResponse('other message')
     return render(request, "login.html", data)  # render，渲染html页面文件并返回给浏览器
+
+
+class Login(View):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        login_success = False
+        now = datetime.datetime.now()
+        ctime = now.strftime("%Y-%m-%d %X")
+        self.data = {
+            "ctime": ctime,
+            "flag": "Success!" if login_success else "Failure!"
+        }
+
+    @method_decorator(my_decorator) #如果是类方法要加这个装饰器
+    def dispatch(self, request, *args, **kwargs):
+        ret = super().dispatch(request, *args, **kwargs)
+        return ret
+    def get(self, request):
+        logging.warning("GET  方法执行了")
+        return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
+
+    def post(self, request):
+        logging.warning("POST  方法执行了")
+        username = request.POST.get('username', "")
+        password = request.POST.get('password', "")
+        hobby = request.POST.getlist('hobby', [])
+        normal = request.POST.get('normal', "")
+        upload(request)
+        logging.warning('username:{}'.format(username))
+        logging.warning('password:{}'.format(password))
+        logging.warning('hobby:{}'.format(hobby))
+        logging.warning('normal:{}'.format(normal))
+        user_add(username, password)
+        self.data['flag'] = "Failure!"
+        return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
 
 
 def signup(request):
@@ -117,10 +167,9 @@ def database(request):
     return HttpResponse('Database Management')
 
 
-
 class IndexView(View):
     def index1(self, request, m, n):
-        return HttpResponse("{},{},Index Html!".format(m,n))
+        return HttpResponse("{},{},Index Html!".format(m, n))
 
     def index2(self, request, year, month):
-        return HttpResponse("{}_{}_Index Html!".format(year,month))
+        return HttpResponse("{}_{}_Index Html!".format(year, month))
