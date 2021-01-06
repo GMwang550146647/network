@@ -1,13 +1,45 @@
 import os
 import datetime
 import logging
-from django.shortcuts import render, HttpResponse
-from .models import sql_api_template,user_add,user_login
-
+from django.shortcuts import render, HttpResponse, redirect
+from .models import sql_api_template, user_add, user_login
+from django.views import View
 # Create your views here.
-USER_NAME = 'gmwang'
-PASS_WORD = 'gmwang'
-PROJECT_PATH= os.path.dirname(os.path.dirname(__file__))
+PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
+
+"""
+
+1.Response Method:
+    1.HttpResponse ->回复一个字符串
+    2.render       ->回复一个网页
+    3.redirect     ->重定向: 
+        重定向状态码：
+            301：永久性转移->资源永久删除，搜索引擎捉取新内容的时候旧网址交换为新网址
+            302：暂时性转移->地址A资源还在，只是临时从旧地址A跳转到地址B
+
+2.FBV 与 CBV模式
+    FBV  : 函数模式
+    CBV  ：类模式
+    
+"""
+
+
+def request(request):
+    data = {
+        'method': request.method,
+        'body': request.body,  # post 的内容
+        'path': request.path,
+        'path_info': request.path_info,
+        'get_full_path()': request.get_full_path(),
+        'META': request.META,
+        'GET': request.GET,
+        'POST': request.POST,
+    }
+    tempt_str = ''
+    for key, val in data.items():
+        tempt_str += "{}:{}<br>".format(key, val)
+    return HttpResponse(tempt_str)
+
 
 def login(request):
     login_success = False
@@ -27,7 +59,7 @@ def login(request):
         logging.warning('password:{}'.format(password))
         logging.warning('hobby:{}'.format(hobby))
         logging.warning('normal:{}'.format(normal))
-        login_success=user_login(username,password)
+        login_success = user_login(username, password)
 
     data = {
         "ctime": ctime,
@@ -58,23 +90,37 @@ def signup(request):
         logging.warning('password:{}'.format(password))
         logging.warning('hobby:{}'.format(hobby))
         logging.warning('normal:{}'.format(normal))
-        user_add(username,password)
+        user_add(username, password)
         data['flag'] = "Failure!"
-        return render(request, "login.html", data)
+        # 1.这个不能重定向（也就是网页url还是signup)
+        # return render(request, "login.html", data)
+        # 2.这个可以重定向
+        return redirect('/login/')
     else:
         # return HttpResponse('other message')
         return render(request, "signup.html", data)  # render，渲染html页面文件并返回给浏览器
 
+
 def upload(request):
-    dest_dir=os.path.join(PROJECT_PATH,'tempt')
+    dest_dir = os.path.join(PROJECT_PATH, 'tempt')
     for filei in request.FILES:
-        file_pathi=os.path.join(dest_dir,filei)
-        content=request.FILES.get(filei,None)
-        with open(file_pathi,'wb') as f:
+        file_pathi = os.path.join(dest_dir, filei)
+        content = request.FILES.get(filei, None)
+        with open(file_pathi, 'wb') as f:
             for chunk in content.chunks():
                 f.write(chunk)
-        logging.warning('{}: Saved to {}'.format(filei,file_pathi))
+        logging.warning('{}: Saved to {}'.format(filei, file_pathi))
+
 
 def database(request):
     sql_api_template()
     return HttpResponse('Database Management')
+
+
+
+class IndexView(View):
+    def index1(self, request, m, n):
+        return HttpResponse("{},{},Index Html!".format(m,n))
+
+    def index2(self, request, year, month):
+        return HttpResponse("{}_{}_Index Html!".format(year,month))
