@@ -6,6 +6,7 @@ from .models import sql_api_template, user_add, user_login
 from django.views import View
 from django.utils.decorators import method_decorator
 
+PATH = 'path'
 # Create your views here.
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 
@@ -95,10 +96,11 @@ class Login(View):
             "flag": "Success!" if login_success else "Failure!"
         }
 
-    @method_decorator(my_decorator) #如果是类方法要加这个装饰器
+    @method_decorator(my_decorator)  # 如果是类方法要加这个装饰器
     def dispatch(self, request, *args, **kwargs):
         ret = super().dispatch(request, *args, **kwargs)
         return ret
+
     def get(self, request):
         logging.warning("GET  方法执行了")
         return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
@@ -143,9 +145,9 @@ def signup(request):
         user_add(username, password)
         data['flag'] = "Failure!"
         # 1.这个不能重定向（也就是网页url还是signup)
-        # return render(request, "login.html", data)
+        return render(request, "login.html", data)
         # 2.这个可以重定向
-        return redirect('/login/')
+        # return redirect('/login/')
     else:
         # return HttpResponse('other message')
         return render(request, "signup.html", data)  # render，渲染html页面文件并返回给浏览器
@@ -173,3 +175,35 @@ class IndexView(View):
 
     def index2(self, request, year, month):
         return HttpResponse("{}_{}_Index Html!".format(year, month))
+
+
+def template_system(request):
+    import datetime
+    num = 99
+    string = 'This is a String variable'
+    lt = [1, 2, 3, 4, 5]
+    dt = {'a': 1, 'b': 2, 'c': 3}
+    date = datetime.date(2021, 6, 7)
+    time = datetime.datetime.now()
+    a_tag = '<a href="https://www.baidu.com">baidu</a>'
+
+    class Person():
+        def __init__(self, name='gmwang'):
+            self.name = name
+
+        # 如果是函数，只能传入无参函数
+        def dream(self):
+            return '{} want feifei'.format(self.name)
+
+    person_list = [Person('gmwang'), Person('feifei')]
+    # 1.这里返回当前位置的全部局部变量,名字和变量名称一一对应
+    # return render(request,'template_system.html',locals())
+    # 2.自己制作字典返回
+    return render(request, 'template_system.html', {
+        'num': num, 'string': string, 'lt': lt, 'dt': dt, 'date': date, 'person_list': person_list, 'time': time,
+        'a_tag': a_tag
+    })
+
+
+def template_inherit(request):
+    return render(request, 'template_inherit.html')

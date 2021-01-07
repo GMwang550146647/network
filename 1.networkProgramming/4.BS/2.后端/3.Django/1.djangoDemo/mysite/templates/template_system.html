@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Template_System</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div>
+    <h2>1.普通变量替换：\{\{ variable \}\}</h2>
+    <p>num :{{num}}</p>
+    <p>string:{{string}}</p>
+    <p>lt :{{lt}}</p>
+    <p>lt.0 :{{lt.0}}</p>
+    <p>dt :{{dt}}</p>
+    <p>dt.a :{{dt.a}}</p>
+    <p>date :{{date}}</p>
+    <p>person_list:{{person_list}}</p>
+    <p>person_list.0.name:{{person_list.0.name}}</p>
+    <p>person_list.1.dream:{{person_list.1.dream}}</p>
+    <p>a_tag:{{a_tag}}</p>
+</div>
+<div>
+    <h2>2.过滤：\{\{ variable | filter_function \}\}</h2>
+    <p>string|lower : {{string | lower}}</p>
+    <p>string|upper : {{string | upper}}</p>
+    <p>string1|default: {{string1 | default:"string1 no found"}}</p>
+    <p>time | date :{{time |date:"Y-m-d H:i:s"}}</p>
+    <p>a_tag | safe :{{a_tag|safe}}</p>
+</div>
+<div>
+    <h2>3.标签(逻辑): \{% code %\}</h2>
+    <h3>3.1.for loop -> person_list</h3>
+    {% for person in person_list %}
+    <p>{{ person.name }} :{{ person.dream}}</p>
+    {% endfor %}
+    <h3>3.2.for loop -> dict</h3>
+    {% for key,val in dt.items %}
+    <p>{{ key }} :{{ val }}</p>
+    {% endfor %}
+    <h3>3.3.if_judgement</h3>
+    {% if num > 100 or num < 0 %}
+    <p>无效</p>  <!--不满足条件，不会生成这个标签-->
+    {% elif num > 80 and num < 100 %}
+    <p>优秀</p>
+    {% else %}  <!--也是在if标签结构里面的-->
+    <p>凑活吧</p>
+    {% endif %}
+    <h3>3.4.csrf_token</h3>
+    {% csrf_token %}{# This is a 注释 ，html页面不可见#}
+</div>
+<script>
+    $('[name="csrfmiddlewaretoken"]').attr({'type': 'none', 'style': "width:1000px"})
+</script>
+<div>
+    <h3>{% block title %}4.模板继承（这里将要被替换) {% endblock %}</h3>
+    <div id="sidebar">
+        {% block sidebar %}
+        <ul>
+            <li><a href="/">这里在子模板中没有定义 'sidebar' 这个block 所以不会被替换，还是用父模板的内容！</a></li>
+            <li><a href="/blog/">Blog</a></li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %} 内容都是一一对应替换的，例如这里是名为'content'的位置{% endblock %}
+    </div>
+</div>
+<div>
+    <h2>5.组件</h2>
+    {% include 'template_nav.html' %}
+</div>
+<div>
+    <h2>6.自定义标签过滤器</h2>
+    <p>6.1.首先要导入my_tags</p>
+    {% load my_tags %}　
+    <p>6.2.然后就可以使用函数了</p>
+
+    <p>{{ num|filter_multi:2 }}</p>
+    <p>{{ num|filter_multi:22 }}</p>
+    <p>{% simple_tag_multi 2 5 %} 参数不限,但不能放在if for语句中</p>
+    <p>{% simple_tag_multi num 5 %}</p>
+
+
+
+
+</div>
+</body>
+</html>

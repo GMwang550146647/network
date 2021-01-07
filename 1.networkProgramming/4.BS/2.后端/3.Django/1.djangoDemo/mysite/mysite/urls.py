@@ -24,6 +24,8 @@ urlpatterns = [
     path('signup/', views.signup),
     path('database/', views.database),
     path('request/', views.request),
+    path('template_system/',views.template_system),
+    path('template_inherit/',views.template_inherit),
 
     # 2.正则路由，正则匹配
     re_path('^login/', views.login),  # 只要这个正则match 就会执行这里
