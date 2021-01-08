@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
+    <style>
+        {% block css%}
+        {% endblock %}
+    </style>
 </head>
 <body>
 <div>
@@ -56,6 +60,8 @@
 </script>
 <div>
     <h3>{% block title %}4.模板继承（这里将要被替换) {% endblock %}</h3>
+    <a href="/template_inherit1/">点击切换为"继承1"</a><br>
+    <a href="/template_inherit2/">点击切换为"继承2"</a>
     <div id="sidebar">
         {% block sidebar %}
         <ul>
@@ -66,8 +72,11 @@
     </div>
 
     <div id="content">
-        {% block content %} 内容都是一一对应替换的，例如这里是名为'content'的位置{% endblock %}
+        {% block content %} 母版：内容都是一一对应替换的，例如这里是名为'content'的位置{% endblock %}
     </div>
+    {% block js%}
+    <script>alert("this is template system")</script>
+    {% endblock %}
 </div>
 <div>
     <h2>5.组件</h2>

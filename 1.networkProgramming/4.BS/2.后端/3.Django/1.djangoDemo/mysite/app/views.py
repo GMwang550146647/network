@@ -69,12 +69,8 @@ def login(request):
         method = getattr(request, method)
         username = method.get('username', "")
         password = method.get('password', "")
-        hobby = method.getlist('hobby', [])
-        normal = method.get('normal', "")
         logging.warning('username:{}'.format(username))
         logging.warning('password:{}'.format(password))
-        logging.warning('hobby:{}'.format(hobby))
-        logging.warning('normal:{}'.format(normal))
         login_success = user_login(username, password)
 
     data = {
@@ -109,13 +105,9 @@ class Login(View):
         logging.warning("POST  方法执行了")
         username = request.POST.get('username', "")
         password = request.POST.get('password', "")
-        hobby = request.POST.getlist('hobby', [])
-        normal = request.POST.get('normal', "")
         upload(request)
         logging.warning('username:{}'.format(username))
         logging.warning('password:{}'.format(password))
-        logging.warning('hobby:{}'.format(hobby))
-        logging.warning('normal:{}'.format(normal))
         user_add(username, password)
         self.data['flag'] = "Failure!"
         return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
@@ -142,15 +134,19 @@ def signup(request):
         logging.warning('password:{}'.format(password))
         logging.warning('hobby:{}'.format(hobby))
         logging.warning('normal:{}'.format(normal))
-        user_add(username, password)
+        user_add(username, password,hobby,normal)
         data['flag'] = "Failure!"
         # 1.这个不能重定向（也就是网页url还是signup)
-        return render(request, "login.html", data)
+        # return render(request, "login.html", data)
         # 2.这个可以重定向
-        # return redirect('/login/')
+        return redirect('/login/')
     else:
         # return HttpResponse('other message')
         return render(request, "signup.html", data)  # render，渲染html页面文件并返回给浏览器
+
+
+def user_management(request):
+    return render(request, 'user_management.html')
 
 
 def upload(request):
@@ -170,11 +166,12 @@ def database(request):
 
 
 class IndexView(View):
-    def index1(self, request, m, n):
+    def get(self, request, m, n):
         return HttpResponse("{},{},Index Html!".format(m, n))
 
-    def index2(self, request, year, month):
-        return HttpResponse("{}_{}_Index Html!".format(year, month))
+
+def index2(request, year, month):
+    return HttpResponse("{}_{}_Index Html!".format(year, month))
 
 
 def template_system(request):
@@ -205,5 +202,9 @@ def template_system(request):
     })
 
 
-def template_inherit(request):
-    return render(request, 'template_inherit.html')
+def template_inherit1(request):
+    return render(request, 'template_inherit1.html')
+
+
+def template_inherit2(request):
+    return render(request, 'template_inherit2.html')

@@ -39,6 +39,8 @@ from django.db import models
 class UserInfo(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
+    hobby = models.CharField(max_length=30)
+    normal = models.CharField(max_length=30)
 
 
 # 1.4.2.数据库基本操作
@@ -63,8 +65,8 @@ def sql_api_template():
     test4 = UserInfo.objects.get(id=100)
     test4.delete()
 
-def user_add(username,password):
-    new_user = UserInfo(username=username, password=password)
+def user_add(username,password,hobby,normal):
+    new_user = UserInfo(username=username, password=password,hobby=hobby,normal=normal)
     new_user.save()
 
 def user_login(username,password):

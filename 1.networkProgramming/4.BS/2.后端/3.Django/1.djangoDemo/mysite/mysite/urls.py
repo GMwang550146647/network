@@ -25,7 +25,9 @@ urlpatterns = [
     path('database/', views.database),
     path('request/', views.request),
     path('template_system/',views.template_system),
-    path('template_inherit/',views.template_inherit),
+    path('template_inherit1/',views.template_inherit1),
+    path('template_inherit2/',views.template_inherit2),
+    path('user_management/',views.user_management),
 
     # 2.正则路由，正则匹配
     re_path('^login/', views.login),  # 只要这个正则match 就会执行这里
@@ -36,7 +38,7 @@ urlpatterns = [
     url(r'^index/(\d+)/(\d+)/', views.IndexView.as_view()),
 
     # 4.有名路由 :传入的参数可以不按顺序，相当于**dict,但是名字一定要对应上
-    url(r'^index/(?P<year>\d+)/(?P<month>\d+)', views.IndexView.as_view()),
+    url(r'^index/(?P<year>\d+)/(?P<month>\d+)', views.index2),
 
     # 5.分发路由:只要是demo1开头的都往这里走
     url(r'^demo1/', include('demo1.urls'))
