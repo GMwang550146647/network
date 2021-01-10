@@ -2,7 +2,7 @@ import os
 import datetime
 import logging
 from django.shortcuts import render, HttpResponse, redirect
-from .models import sql_api_template, user_add, user_login
+from .models import sql_api_template, user_add, user_login,get_users
 from django.views import View
 from django.utils.decorators import method_decorator
 
@@ -146,7 +146,8 @@ def signup(request):
 
 
 def user_management(request):
-    return render(request, 'user_management.html')
+    users=get_users()
+    return render(request, 'user_management.html',{'users':users})
 
 
 def upload(request):

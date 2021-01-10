@@ -7,8 +7,17 @@
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <style>
-        {% block css%}
-        {% endblock %}
+        {
+        %
+        block
+        css
+        %
+        }
+        {
+        %
+        endblock
+        %
+        }
     </style>
 </head>
 <body>
@@ -42,7 +51,7 @@
     {% endfor %}
     <h3>3.2.for loop -> dict</h3>
     {% for key,val in dt.items %}
-    <p>{{ key }} :{{ val }}</p>
+    <p>{{ key }} :{{ va11l }}</p>
     {% endfor %}
     <h3>3.3.if_judgement</h3>
     {% if num > 100 or num < 0 %}
@@ -92,8 +101,6 @@
     <p>{{ num|filter_multi:22 }}</p>
     <p>{% simple_tag_multi 2 5 %} 参数不限,但不能放在if for语句中</p>
     <p>{% simple_tag_multi num 5 %}</p>
-
-
 
 
 </div>

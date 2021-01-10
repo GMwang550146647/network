@@ -5,6 +5,7 @@ from django.db import models
 1.创建表结构：
     1.1.ORM无法操作到数据库级别的命令，只能操作到数据表，所以第一步需要在数据库中创建表空间
         create database 数据库名称 default charset=utf8; # 防止编码问题，指定为 utf8
+        create database mysite default charset=utf8;
     1.2.配置settings文件
         DATABASES = { 
             'default': 
@@ -39,8 +40,8 @@ from django.db import models
 class UserInfo(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
-    hobby = models.CharField(max_length=30)
-    normal = models.CharField(max_length=30)
+    hobby = models.CharField(max_length=30,default='nothing')
+    normal = models.CharField(max_length=30,default='No')
 
 
 # 1.4.2.数据库基本操作
@@ -72,3 +73,15 @@ def user_add(username,password,hobby,normal):
 def user_login(username,password):
     users = UserInfo.objects.filter(username=username,password=password)
     return True if users else False
+
+def get_users(*args,**kwargs):
+    user_table = UserInfo.objects.all()
+    return user_table
+
+def edit_user(id,**kwargs):
+    UserInfo.objects.filter(id=id).update(**kwargs)
+    updated_user=UserInfo.object.filter(id=id)
+    return updated_user[0]
+
+def delete_user(id):
+    UserInfo.objects.filter(id=id).delete()
