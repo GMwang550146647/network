@@ -1,0 +1,1 @@
+document.getElementById('demo').innerText='This is a demo in template_system for static js test'

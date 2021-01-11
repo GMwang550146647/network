@@ -7,17 +7,11 @@
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <style>
-        {
-        %
-        block
-        css
-        %
+        {%  block  css %}
+        .nav {
+            background-color: orange;
         }
-        {
-        %
-        endblock
-        %
-        }
+        {%  endblock  %}
     </style>
 </head>
 <body>
@@ -97,12 +91,34 @@
     {% load my_tags %}　
     <p>6.2.然后就可以使用函数了</p>
 
-    <p>{{ num|filter_multi:2 }}</p>
-    <p>{{ num|filter_multi:22 }}</p>
-    <p>{% simple_tag_multi 2 5 %} 参数不限,但不能放在if for语句中</p>
-    <p>{% simple_tag_multi num 5 %}</p>
+    <p>{{ string|filter_multi:' This is an additional sentence' }}</p>
+    <p>{% simple_tag_multi string ' ' 'Hello' 'World' %} 参数不限,但不能放在if for语句中</p>
 
 
+</div>
+<div>
+    <h2>7.自定义组件</h2>
+    <p>7.1.首先要导入my_tags</p>
+    {% load my_tags %}　
+    <p>6.2.然后就可以使用函数了</p>
+    <div>
+        {% show_include 10 %}
+    </div>
+</div>
+<div>
+    <h2>7.静态文件相关</h2>
+
+    <p>7.1.导入静态库</p>
+    {% load static %}
+    <p>7.2.导入静态图片</p>
+    <div style="height: 200px ; width:200px ;">
+        <img width=100% height=100% src='{% static "images/kugou.PNG" %}' alt="Hi!" />
+    </div>
+
+    <p>7.3.导入静态js</p>
+    {% load static %}
+    <div id="demo"> This is originally empty!</div>
+    <script src='{% static "js/demo.js" %}'></script>
 </div>
 </body>
 </html>

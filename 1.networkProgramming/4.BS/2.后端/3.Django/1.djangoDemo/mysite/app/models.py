@@ -29,8 +29,8 @@ from django.db import models
                 name = models.CharField(max_length=20)
         2.创建表
             # python manage.py migrate   # 创建表结构
-            # python manage.py makemigrations app  # 让 Django 知道我们在我们的模型有一些变更
-            # python manage.py migrate app   # 创建表结构
+            # python manage.py makemigrations [app] # 让 Django 知道我们在我们的模型有一些变更
+            # python manage.py migrate [app]   # 创建表结构
         3.数据操作
         
 """
@@ -38,9 +38,20 @@ from django.db import models
 
 # 1.4.1.表定义
 class UserInfo(models.Model):
+
+    '''
+    create table app_userinfo(
+        id int primary key auto_increment,
+        name varchar(30),
+        password varchar(30),
+        hobby varchar(60),
+        normal varchar(30),
+    )
+    '''
+    id=models.AutoField(primary_key=True)
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
-    hobby = models.CharField(max_length=30,default='nothing')
+    hobby = models.CharField(max_length=60)
     normal = models.CharField(max_length=30,default='No')
 
 
@@ -58,13 +69,16 @@ def sql_api_template():
         print(f"id:{rowi.id};\tusername:{rowi.username};\tpassword:{rowi.password}")
 
     # 3.update
-    test2 = UserInfo.objects.get(id=2)
-    test2.username = 'gmwang1'
-    test2.save()
+    # test2 = UserInfo.objects.get(id=2)
+    # test2.username = 'gmwang1'
+    # test2.save()
+    UserInfo.objects.get(id=2).update(username='gmwang1')
+
 
     # 4.delete
-    test4 = UserInfo.objects.get(id=100)
-    test4.delete()
+    # test4 = UserInfo.objects.get(id=100)
+    # test4.delete()
+    UserInfo.objects.get(id=100).delete()
 
 def user_add(username,password,hobby,normal):
     new_user = UserInfo(username=username, password=password,hobby=hobby,normal=normal)
