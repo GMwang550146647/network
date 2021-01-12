@@ -24,15 +24,17 @@ urlpatterns = [
     path('signup/', views.signup),
     path('database/', views.database),
     path('request/', views.request),
-    path('template_system/',views.template_system),
-    path('template_inherit1/',views.template_inherit1),
-    path('template_inherit2/',views.template_inherit2),
-    path('user_management/',views.user_management),
+    path('template_system/', views.template_system),
+    path('template_inherit1/', views.template_inherit1),
+    path('template_inherit2/', views.template_inherit2),
+    path('user_management/', views.user_management),
 
     # 2.正则路由，正则匹配
-    re_path('^login/', views.login),  # 只要这个正则match 就会执行这里
+    re_path('^login/', views.login, name='lg'),  # 只要这个正则match 就会执行这里 #->别名 用于反向解释！就是把页面中的 {% url 'lg' [args] %} 解析为  'login/'
     re_path('^login1/', views.Login.as_view()),  # 只要这个正则match 就会执行这里
     # url('^login/.*', views.login),  # 只要这个正则match 就会执行这里
+    url('^delete_user/(\d+)/', views.delete_user,name='delete'),
+    url('^edit_user/', views.edit_user,name='edit'),
 
     # 3.无名路由 :传入的参数要按顺序，index1有三个参数 ： request, m,n
     url(r'^index/(\d+)/(\d+)/', views.IndexView.as_view()),
@@ -41,5 +43,6 @@ urlpatterns = [
     url(r'^index/(?P<year>\d+)/(?P<month>\d+)', views.index2),
 
     # 5.分发路由:只要是demo1开头的都往这里走
-    url(r'^demo1/', include('demo1.urls'))
+    url(r'^demo1/', include('demo1.urls')),
+    # url(r'^books/', include('books.urls'))
 ]

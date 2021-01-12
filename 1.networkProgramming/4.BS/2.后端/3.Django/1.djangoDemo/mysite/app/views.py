@@ -1,8 +1,8 @@
 import os
 import datetime
 import logging
-from django.shortcuts import render, HttpResponse, redirect
-from .models import sql_api_template, user_add, user_login,get_users
+from django.shortcuts import render, HttpResponse, redirect, reverse
+from .models import sql_api_template, user_add, user_login, get, delete, edit
 from django.views import View
 from django.utils.decorators import method_decorator
 
@@ -134,20 +134,45 @@ def signup(request):
         logging.warning('password:{}'.format(password))
         logging.warning('hobby:{}'.format(hobby))
         logging.warning('normal:{}'.format(normal))
-        user_add(username, password,hobby,normal)
+        user_add(username, password, hobby, normal)
         data['flag'] = "Failure!"
         # 1.这个不能重定向（也就是网页url还是signup)
         # return render(request, "login.html", data)
         # 2.这个可以重定向
-        return redirect('/login/')
+        # return redirect('/login/')
+        # 也可以使用反向解释技术，前提是 view中使用了 name字段
+        print("reverse('lg')={}".format(reverse('lg')))
+        return redirect(reverse('lg'))
     else:
         # return HttpResponse('other message')
         return render(request, "signup.html", data)  # render，渲染html页面文件并返回给浏览器
 
 
 def user_management(request):
-    users=get_users()
-    return render(request, 'user_management.html',{'users':users})
+    users = get()
+    return render(request, 'user_management.html', {'users': users})
+
+
+def delete_user(request, id):
+    delete(id=id)
+    return redirect('/user_management/')
+
+
+def edit_user(request):
+    method = 'GET' if request.GET else ('POST' if request.POST else "")
+    if method:
+        method = getattr(request, method)
+        user_info = {
+            'id': method.get('id', -1),
+            'username': method.get('username', ""),
+            'password': method.get('password', ""),
+            'hobby': method.getlist('hobby', []),
+            'normal': method.get('normal', "")
+        }
+        edit(**user_info)
+        return redirect('/user_management/')
+    else:
+        return HttpResponse('Error Occurs When Editing Userinfo !')
 
 
 def upload(request):

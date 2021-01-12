@@ -46,6 +46,7 @@ class UserInfo(models.Model):
         hobby varchar(60),
         normal varchar(30),
     )
+    #具体查看https://www.cnblogs.com/clschao/articles/10427807.html
     '''
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=30)
@@ -62,7 +63,7 @@ class UserInfo(models.Model):
 def sql_api_template():
     # 1.insert
     # 方式1
-    test1 = UserInfo(id=100, username='gmwang', password='gmwang', hobby=['C++'])
+    test1 = UserInfo(username='feifei', password='gmwang', hobby=['C++'])
     test1.save()
     # 方式2
     # new_obj=UserInfo.objects.create(id=100,username='gmwang',password='gmwnag')
@@ -76,8 +77,7 @@ def sql_api_template():
 
     # 2.Select
     user_table = UserInfo.objects.all()  # ->选全部
-    excluded = UserInfo.objects.all().exclude(id=6)  # ->排除id==6的
-    selected_columns = UserInfo.objects.all().values('id','username')  # ->只选取id 和username列
+
     seleted_rows = UserInfo.objects.filter(id=1)  # ->where
     # seleted_row=UserInfo.objects.get(id=1) #获取一个,不存在会抛出异常
     for rowi in user_table:
@@ -90,6 +90,11 @@ def sql_api_template():
     # test2.save()
     # 方式2
     UserInfo.objects.filter(id=2).update(username='gmwang1')
+    # 方式3
+    obj, created = UserInfo.objects.update_or_create(
+        username='gmwang9909',  # 查找筛选条件（如果找不到就添加，找到就更新default的内容）
+        defaults={"hobby": ['Python']}  # 要修改的值
+    )
 
     # 4.delete
     # 方式1
@@ -97,6 +102,32 @@ def sql_api_template():
     # test4.delete()
     # 方式2
     UserInfo.objects.filter(id=6).delete()
+
+    # 5.一般查询技巧
+    # 5.1.exclude -> 排除某些行
+    excluded = UserInfo.objects.all().exclude(id=6)  # ->排除id==6的
+    # 5.2.values -> 选择特定列
+    selected_columns = UserInfo.objects.all().values('id', 'username')  # ->只选取id 和username列
+    # 5.3.order_by -> 排序
+    ordered_list = UserInfo.objects.all().order_by('id').reverse()
+    # 5.4.exists ->查询是否存在
+    exists = UserInfo.objects.all().exclude(id=6).exists()
+    # 5.5.distinct ->去重
+    distinct = UserInfo.objects.all().values('username').distinct()
+    print([item['username'] for item in distinct])
+
+    # 6.基于双下划线的模糊查询
+    # UserInfo.objects.filter(price__in=[100,200,300]) #price值等于这三个里面的任意一个的对象
+    # UserInfo.objects.filter(price__gt=100)  #大于，大于等于是price__gte=100，别写price>100，这种参数不支持
+    # UserInfo.objects.filter(price__lt=100)
+    # UserInfo.objects.filter(price__range=[100,200])  #sql的between and，大于等于100，小于等于200
+    # UserInfo.objects.filter(title__icontains="python") #不区分大小写
+    # UserInfo.objects.filter(title__startswith="py") #以什么开头，istartswith  不区分大小写
+    # UserInfo.objects.filter(pub_date__year=2012)
+    result = UserInfo.objects.filter(username__contains="gmwang")  # title值中包含gmwang的
+    print(result)
+
+    #7.表连接
 
 
 def user_add(username, password, hobby, normal):
@@ -109,19 +140,19 @@ def user_login(username, password):
     return True if users else False
 
 
-def get_users(*args, **kwargs):
+def get(*args, **kwargs):
     user_table = UserInfo.objects.all()
     return user_table
 
 
-def edit_user(id, **kwargs):
+def edit(id, **kwargs):
     UserInfo.objects.filter(id=id).update(**kwargs)
-    updated_user = UserInfo.object.filter(id=id)
+    updated_user = UserInfo.objects.filter(id=id)
     return updated_user[0]
 
 
-def delete_user(id):
-    UserInfo.objects.filter(id=id).delete()
+def delete(**kwargs):
+    UserInfo.objects.filter(**kwargs).delete()
 
 
 '''
