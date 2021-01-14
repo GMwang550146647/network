@@ -16,31 +16,33 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.conf.urls import url
-from app import views
+from app import views as app_view
+from books import views as book_view
 
 urlpatterns = [
     # 1.简单路由，需要完全匹配
     path('admin/', admin.site.urls),
-    path('signup/', views.signup),
-    path('database/', views.database),
-    path('request/', views.request),
-    path('template_system/', views.template_system),
-    path('template_inherit1/', views.template_inherit1),
-    path('template_inherit2/', views.template_inherit2),
-    path('user_management/', views.user_management),
+    path('signup/', app_view.signup),
+    path('database1/', app_view.database),
+    path('database2/', book_view.database),
+    path('request/', app_view.request),
+    path('template_system/', app_view.template_system),
+    path('template_inherit1/', app_view.template_inherit1),
+    path('template_inherit2/', app_view.template_inherit2),
+    path('user_management/', app_view.user_management),
 
     # 2.正则路由，正则匹配
-    re_path('^login/', views.login, name='lg'),  # 只要这个正则match 就会执行这里 #->别名 用于反向解释！就是把页面中的 {% url 'lg' [args] %} 解析为  'login/'
-    re_path('^login1/', views.Login.as_view()),  # 只要这个正则match 就会执行这里
+    re_path('^login/', app_view.login, name='lg'),  # 只要这个正则match 就会执行这里 #->别名 用于反向解释！就是把页面中的 {% url 'lg' [args] %} 解析为  'login/'
+    re_path('^login1/', app_view.Login.as_view()),  # 只要这个正则match 就会执行这里
     # url('^login/.*', views.login),  # 只要这个正则match 就会执行这里
-    url('^delete_user/(\d+)/', views.delete_user,name='delete'),
-    url('^edit_user/', views.edit_user,name='edit'),
+    url('^delete_user/(\d+)/', app_view.delete_user,name='delete'),
+    url('^edit_user/', app_view.edit_user,name='edit'),
 
     # 3.无名路由 :传入的参数要按顺序，index1有三个参数 ： request, m,n
-    url(r'^index/(\d+)/(\d+)/', views.IndexView.as_view()),
+    url(r'^index/(\d+)/(\d+)/', app_view.IndexView.as_view()),
 
     # 4.有名路由 :传入的参数可以不按顺序，相当于**dict,但是名字一定要对应上
-    url(r'^index/(?P<year>\d+)/(?P<month>\d+)', views.index2),
+    url(r'^index/(?P<year>\d+)/(?P<month>\d+)', app_view.index2),
 
     # 5.分发路由:只要是demo1开头的都往这里走
     url(r'^demo1/', include('demo1.urls')),

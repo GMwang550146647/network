@@ -2,7 +2,7 @@ import os
 import datetime
 import logging
 from django.shortcuts import render, HttpResponse, redirect, reverse
-from .models import sql_api_template, user_add, user_login, get, delete, edit
+from .models import SingleTableManagement, user_add, user_login, get, delete, edit
 from django.views import View
 from django.utils.decorators import method_decorator
 
@@ -187,8 +187,8 @@ def upload(request):
 
 
 def database(request):
-    sql_api_template()
-    return HttpResponse('Database Management')
+    SingleTableManagement().run()
+    return HttpResponse('Database Management: Single Table Management')
 
 
 class IndexView(View):
