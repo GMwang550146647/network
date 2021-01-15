@@ -63,6 +63,8 @@ class Book(models.Model):
     """
     title = models.CharField(max_length=32)
     publishDate = models.DateField()
+    comments = models.IntegerField(default=1)
+    good = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     publish = models.ForeignKey(to='Publish', on_delete=models.CASCADE)  # (在多的一方设置这个属性列)
     # 1.多对多 方式1：自动生成多对多表
@@ -78,7 +80,7 @@ class Book(models.Model):
     # through_fields接受一个2元组（'field1'，'field2'）：
     # 其中field1是定义ManyToManyField的模型外键的名（author），field2是关联目标模型（book）的外键名。
     def __str__(self):
-        return f"id: {self.id} || title : {self.title} ||  publishDate: {self.publishDate}||  price : {self.price} ||  publish_id: {self.publish_id}"
+        return f"id: {self.id} || title : {self.title} ||  publishDate: {self.publishDate}|| good: {self.good}|| comments: {self.comments}|| price : {self.price} ||  publish_id: {self.publish_id}"
 
 
 class Book_Author(models.Model):
@@ -222,15 +224,19 @@ class MultiTableManagement():
         price = Book.objects.aggregate(avg=Avg('price'), max=Max('price'), min=Min('price'))
         print(price)
         # 2.分组
-        grouped=Book.objects.values('publish_id').annotate(avg=Avg('price'))
+        # 2.1.根据本表字段进行分组聚合
+        grouped = Book.objects.values('publish_id').annotate(avg=Avg('price'))
         print(grouped)
-        grouped = Publish.objects.annotate(avg=Avg('book__price')).values('id','avg')
+        # 2.2.根据外键字段进行分组聚合
+        grouped = Publish.objects.annotate(avg=Avg('book__price')).values('id', 'avg')
         print(grouped)
 
     def F_query(self):
-        pass
+        from django.db.models import F
+        Book.objects.filter
 
     def Q_query(self):
+        from django.db.models import Q
         pass
 
     def update(self):
