@@ -224,7 +224,7 @@ class MultiTableManagement():
         price = Book.objects.aggregate(avg=Avg('price'), max=Max('price'), min=Min('price'))
         print(price)
         # 2.分组
-        # 2.1.根据本表字段进行分组聚合
+        # 2.1.根据本表字段进行分组聚合(不指定values就默认用id分组)
         grouped = Book.objects.values('publish_id').annotate(avg=Avg('price'))
         print(grouped)
         # 2.2.根据外键字段进行分组聚合
@@ -233,11 +233,36 @@ class MultiTableManagement():
 
     def F_query(self):
         from django.db.models import F
-        Book.objects.filter
+        # 1.计算两属性列之间的计算大小关系
+        objs = Book.objects.filter(comments__gt=F('good'))
+        print(objs)
+        # 2.更新（自加）
+        Book.objects.filter(id=5).update(comments=F('comments') + 100)
 
     def Q_query(self):
         from django.db.models import Q
-        pass
+        # 1.由于filter都是进行AND操作的，如果要进行OR操作可以用Q查询
+        bookList = Book.objects.filter(Q(author__name="gmwang") | Q(author__name="feifei"))
+        # 2.更复杂的多层嵌套
+        bookList = Book.objects.filter(Q(author__name="yuan") & ~Q(publishDate__year=2017)).values_list("title")
+        # 可以进行Q嵌套，多层Q嵌套等，其实工作中比较常用
+        bookList = Book.objects.filter(
+            Q(Q(author__name="yuan") & ~Q(publishDate__year=2017)) & Q(id__gt=6)).values_list("title")
+        # 3.注意q查询必须在前面  （也是and的关系，但是Q必须写在前面)
+        bookList = Book.objects.filter(Q(publishDate__year=2016) | Q(publishDate__year=2017), title__icontains="python")
+
+    def raw_query(self):
+        # 1.ORM自带的
+        ret = Book.objects.raw('select * from books_book where comments > %s', params=[10, ])
+        print(ret)
+        for result_i in ret:
+            print(result_i)
+        # 2.连接数据库
+        from django.db import connection, connections
+        cursor = connection.cursor()  # cursor = connections['default'].cursor()
+        cursor.execute('select * from books_book where comments > %s', params=[10, ])
+        for result_i in cursor.fetchall():
+            print(result_i)
 
     def update(self):
         """1.一对一，多对一 一样"""
@@ -268,5 +293,6 @@ class MultiTableManagement():
         self.agg_query()
         self.Q_query()
         self.F_query()
+        self.raw_query()
         # self.update()
         # self.delete()
