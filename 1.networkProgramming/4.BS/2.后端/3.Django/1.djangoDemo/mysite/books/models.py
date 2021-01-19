@@ -1,8 +1,9 @@
 from django.db import models
 import random
 from django.db.models import Avg, Max, Min, Sum, Count
-
+from django.db import transaction
 """
+Warning: 查询是懒惰查询，就是要输出结果的时候才真正执行
 多对一：ForeignKey  ：外键约束
 一对一：OneToOneField ：外键约束加上unique约束
 多对多：ManyToManyField： 添加一个表，创建两个id的对应关系
@@ -263,6 +264,29 @@ class MultiTableManagement():
         cursor.execute('select * from books_book where comments > %s', params=[10, ])
         for result_i in cursor.fetchall():
             print(result_i)
+
+    def lock_query(self):
+        """
+        事务，加锁
+        :return:
+        """
+        '''
+        1.select_for_update(nowait=False, skip_locked=False) 
+            返回一个锁住行直到事务结束的查询集，如果数据库支持，它将生成一个 SELECT ... FOR UPDATE 语句
+        '''
+        # 加互斥锁，由于mysql在查询时自动加的是共享锁，所以我们可以手动加上互斥锁。create、update、delete操作时，mysql自动加行级互斥锁
+        req1 = Author.objects.select_for_update().filter(author='gmwang').update(name='gmwang1')
+        req1 = Author.objects.select_for_update().filter(author='gmwang').delete(name='gmwang1')
+
+    def transaction_query(self):
+        """
+        局部使用事务（transaction),全局详见setting 中DATABASE配置，另见 https://www.cnblogs.com/clschao/articles/10463267.html
+        :return:
+        """
+        with transaction.atomic():
+            #inside a transaction
+            pass
+
 
     def update(self):
         """1.一对一，多对一 一样"""

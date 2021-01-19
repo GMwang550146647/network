@@ -82,8 +82,29 @@ DATABASES = {
         'PORT': '3306',
         'USER': 'root',
         'PASSWORD': 'gmwang',
-    }
+    },
 }
+
+'''全局开启事务'''
+# 以下的设置将每个请求都包裹在一个事务中。这个功能使用起来非常简单，你只需要将它的配置项ATOMIC_REQUESTS设置为True。
+# 它是这样工作的：当有请求过来时，Django会在调用视图方法前开启一个事务。如果请求却正确处理并正确返回了结果，Django就会提交该事务。否则，Django会回滚该事务。
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mysite',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#         'USER': 'root',
+#         'PASSWORD': 'gmwang',
+#         'OPTIONS': {
+#             "init_command": "SET default_storage_engine='INNODB'",
+#             # 　　　　　　　"init_command":"SET sql_mode='STRICT_TRANS_TABLES'", #配置开启严格sql模式
+#         },
+#         "ATOMIC_REQUESTS": True,  # 全局开启事务，绑定的是http请求响应整个过程
+#         "AUTOCOMMIT": False,  # 全局取消自动提交，慎用
+#     },
+#     'other': {'ENGINE': 'django.db.backends.mysql'}  # 还可以配置其他数据库
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

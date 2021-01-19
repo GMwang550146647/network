@@ -2,6 +2,7 @@ import os
 import datetime
 import logging
 from django.shortcuts import render, HttpResponse, redirect, reverse
+from django.http import JsonResponse
 from .models import SingleTableManagement, user_add, user_login, get, delete, edit
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -79,6 +80,28 @@ def login(request):
     }
     # return HttpResponse('other message')
     return render(request, "login.html", data)  # render，渲染html页面文件并返回给浏览器
+
+
+def login_ajax(request):
+    logging.warning("Logining")
+    login_success = False
+    now = datetime.datetime.now()
+    ctime = now.strftime("%Y-%m-%d %X")
+    # 1.通过判断 GET 以及 POST 的携带数据来判断用了何种方法
+    method = 'GET' if request.GET else ('POST' if request.POST else "")
+    logging.warning('method:{}'.format(method))
+    if method:
+        method = getattr(request, method)
+        username = method.get('username', "")
+        password = method.get('password', "")
+        logging.warning('username:{}'.format(username))
+        logging.warning('password:{}'.format(password))
+        login_success = user_login(username, password)
+    data = {
+        "ctime": ctime,
+        "flag": "Success!" if login_success else "Failure!"
+    }
+    return JsonResponse(data, safe=False)
 
 
 class Login(View):
