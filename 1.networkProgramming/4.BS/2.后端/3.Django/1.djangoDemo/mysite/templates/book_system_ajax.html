@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Management</title>
+    <title>Books Management</title>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
@@ -119,7 +119,6 @@
                     <th>PublishDate</th>
                     <th>Price</th>
                     <th>Comments</th>
-                    <th>Good</th>
                     <th>Publish</th>
                     <th>Authors</th>
                     <th>Managements</th>
@@ -127,12 +126,11 @@
                 </thead>
                 <tbody>
                 {% for book in books %}
-                <tr>
+                <tr id="row_{{ book.id }}">
                     <td>{{ book.title }}</td>
                     <td>{{ book.publishDate }}</td>
                     <td>{{ book.price }}</td>
                     <td>{{ book.comments }}</td>
-                    <td>{{ book.good }}</td>
                     <td>{{ book.publish.name }}</td>
                     <td>{{ book.get_authors }}</td>
                     <td>
@@ -149,11 +147,11 @@
                                     url: '/delete_book/',
                                     type: 'get',
                                     data: {
-                                        'id':{{ book.id }}
+                                        'id': '{{ book.id }}',
                                     },
-                                    success: function (res) {
+                                    success: function(res) {
                                         alert("Delete Success!")
-                                        $('#delete_{{ book.id }}').remove()
+                                        $('#row_{{ book.id }}').remove()
                                     }
                                 })
                             })
