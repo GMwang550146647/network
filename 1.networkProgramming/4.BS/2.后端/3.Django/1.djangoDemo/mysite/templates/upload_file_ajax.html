@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-image: url("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2851728749,2343107280&fm=11&gp=0.jpg");
+        }
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4" align="center"><h3>Upload Data !</h3></div>
+</div>
+<form class="form-horizontal" role="form" action="/upload_file_ajax/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row form-group">
+        <label for="username" class="col-sm-3 control-label">Username:</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+        </div>
+    </div>
+    <div class="row form-group">
+        <label for="password" class="col-sm-3 control-label">Password:</label>
+        <div class="col-sm-6">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        </div>
+    </div>
+    <div class="row form-group">
+        <label for="file1" class="col-sm-3 control-label">FILE1:</label>
+        <div class="col-sm-6">
+            <input type="file" id="file1" name="file1">
+        </div>
+    </div>
+    <div class="row form-group">
+        <label for="file2" class="col-sm-3 control-label">FILE2:</label>
+        <div class="col-sm-6">
+            <input type="file" id="file2" name="file2">
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <button type="submit" class="btn btn-default">Upload</button>
+        </div>
+    </div>
+        <div class="row form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <button type="button" class="btn btn-default" id="upload_file">Upload Ajax</button>
+        </div>
+    </div>
+</form>
+<script>
+    $('#upload_file').on('click',function () {
+        // ajax上传文件必须用formData结构体！
+        var formdata =new FormData();
+        formdata.append('username',$('#username').val());
+        formdata.append('password',$('#password').val());
+        formdata.append('csrfmiddlewaretoken',$('[name="csrfmiddlewaretoken"]').val());
+        formdata.append('file1',$('#file1')[0].files[0]);
+        // 由于$(xxx)返回的结果是list,所以只返回第一个，然后files[0]代表该文件的内容
+        formdata.append('file2',$('[name=file2]')[0].files[0]);
+        $.ajax({
+            url:'/upload_file_ajax/',
+            type:'post',
+            data: formdata,
+            processData:false,
+            contentType:false,
+            success:function(res){
+                alert("Upload Success!")
+            }
+        })
+
+    })
+</script>
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <image src="/static/images/kugou.PNG" width="100%"></image>
+
+    </div>
+</div>
+</body>
+</html>

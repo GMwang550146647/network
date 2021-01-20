@@ -2,6 +2,7 @@ from django.db import models
 import random
 from django.db.models import Avg, Max, Min, Sum, Count
 from django.db import transaction
+
 """
 Warning: 查询是懒惰查询，就是要输出结果的时候才真正执行
 多对一：ForeignKey  ：外键约束
@@ -82,6 +83,11 @@ class Book(models.Model):
     # 其中field1是定义ManyToManyField的模型外键的名（author），field2是关联目标模型（book）的外键名。
     def __str__(self):
         return f"id: {self.id} || title : {self.title} ||  publishDate: {self.publishDate}|| good: {self.good}|| comments: {self.comments}|| price : {self.price} ||  publish_id: {self.publish_id}"
+
+    def get_authors(self):
+        author_list = self.author.all()
+        author_name_list = [author.name for author in author_list]
+        return ','.join(author_name_list)
 
 
 class Book_Author(models.Model):
@@ -284,9 +290,8 @@ class MultiTableManagement():
         :return:
         """
         with transaction.atomic():
-            #inside a transaction
+            # inside a transaction
             pass
-
 
     def update(self):
         """1.一对一，多对一 一样"""

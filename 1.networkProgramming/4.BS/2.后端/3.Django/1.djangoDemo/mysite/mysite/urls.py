@@ -30,6 +30,9 @@ urlpatterns = [
     path('template_inherit1/', app_view.template_inherit1),
     path('template_inherit2/', app_view.template_inherit2),
     path('user_management/', app_view.user_management),
+    path('upload_file_ajax/', app_view.UploadFile.as_view()),
+    path('book_system_ajax/', book_view.BookSystemAjax.as_view()),
+    path('delete_book/', book_view.DeleteBook.as_view()),
 
     # 2.正则路由，正则匹配
     re_path('^login/', app_view.login, name='lg'),  # 只要这个正则match 就会执行这里 #->别名 用于反向解释！就是把页面中的 {% url 'lg' [args] %} 解析为  'login/'
@@ -38,6 +41,7 @@ urlpatterns = [
     # url('^login/.*', views.login),  # 只要这个正则match 就会执行这里
     url('^delete_user/(\d+)/', app_view.delete_user,name='delete'),
     url('^edit_user/', app_view.edit_user,name='edit'),
+
 
     # 3.无名路由 :传入的参数要按顺序，index1有三个参数 ： request, m,n
     url(r'^index/(\d+)/(\d+)/', app_view.IndexView.as_view()),

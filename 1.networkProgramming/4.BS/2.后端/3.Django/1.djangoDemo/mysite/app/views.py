@@ -1,6 +1,7 @@
 import os
 import datetime
 import logging
+import json
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.http import JsonResponse
 from .models import SingleTableManagement, user_add, user_login, get, delete, edit
@@ -97,11 +98,23 @@ def login_ajax(request):
         logging.warning('username:{}'.format(username))
         logging.warning('password:{}'.format(password))
         login_success = user_login(username, password)
-    data = {
-        "ctime": ctime,
-        "flag": "Success!" if login_success else "Failure!"
-    }
-    return JsonResponse(data, safe=False)
+        data = {
+            "ctime": ctime,
+            "flag": "Success!" if login_success else "Failure!"
+        }
+        # 1.直接使用JsonResponse（远端收到的是json对象）
+        # return JsonResponse(data, safe=False)
+        # 2.转化为字符串再发送（但是远端收到的是字符串）
+        data_json = json.dumps(data)
+        # return HttpResponse(data_json)
+        # 3.直接传送json，远端收到json（同JsonResponse)
+        return HttpResponse(data_json, content_type='application/json')
+    else:
+        data = {
+            'ctime': ctime,
+            'flag': 'Failure!'
+        }
+        return render(request, "login_ajax.html", data)
 
 
 class Login(View):
@@ -170,7 +183,6 @@ def signup(request):
         # return HttpResponse('other message')
         return render(request, "signup.html", data)  # render，渲染html页面文件并返回给浏览器
 
-
 def user_management(request):
     users = get()
     return render(request, 'user_management.html', {'users': users})
@@ -199,15 +211,22 @@ def edit_user(request):
 
 
 def upload(request):
+    """
+    上传文件数据的时候必须要加这个enctype属性，不然只会在post出现 文件名字，不会在FILE中出现文件信息！
+    <form action="" method="post" enctype="multipart/form-data">
+    """
     dest_dir = os.path.join(PROJECT_PATH, 'tempt')
     for filei in request.FILES:
-        file_pathi = os.path.join(dest_dir, filei)
-        content = request.FILES.get(filei, None)
-        with open(file_pathi, 'wb') as f:
-            for chunk in content.chunks():
-                f.write(chunk)
-        logging.warning('{}: Saved to {}'.format(filei, file_pathi))
-
+        file_obj = request.FILES.get(filei, None)
+        file_pathi = os.path.join(dest_dir, file_obj.name)
+        logging.warning("Receive Name: {} -> File : {}".format(filei,file_obj.name))
+        if file_obj:
+            with open(file_pathi, 'wb') as f:
+                for chunk in file_obj.chunks():
+                    f.write(chunk)
+            logging.warning('{}: Saved to {}'.format(filei, file_pathi))
+        else:
+            logging.error("No File To Save!")
 
 def database(request):
     SingleTableManagement().run()
@@ -257,3 +276,18 @@ def template_inherit1(request):
 
 def template_inherit2(request):
     return render(request, 'template_inherit2.html')
+
+class UploadFile(View):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    def get(self,request):
+        return render(request,'upload_file_ajax.html')
+    def post(self,request):
+        try:
+            logging.warning("Received POST DATA: {}".format(request.POST))
+            logging.warning("Received FILES DATA: {}".format(request.FILES))
+            upload(request)
+            return HttpResponse("Upload Success!")
+        except Exception as err:
+            logging.error(err)
+            return HttpResponse("Upload Failure!")

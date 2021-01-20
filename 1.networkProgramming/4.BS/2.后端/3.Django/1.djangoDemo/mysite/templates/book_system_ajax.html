@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <!--    <link rel="stylesheet" href="/static/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        table td {
+            text-align: center;
+            height: 30px;
+            padding-top: 10px;
+            width: 100%;
+            /*word-break: keep-all; !* 不换行 *!*/
+            /*white-space: nowrap; !* 不换行 *!*/
+            /*overflow: hidden; !* 内容超出宽度时隐藏超出部分的内容 *!*/
+            /*text-overflow: ellipsis; !* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*!*/
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow: hidden; /*这个参数根据需要来绝对要不要*/
+        }
+
+        table th {
+            text-align: center;
+            height: 30px;
+            padding-top: 10px;
+        }
+
+        body {
+            background-image: url("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2851728749,2343107280&fm=11&gp=0.jpg");
+        }
+
+        table {
+
+            table-layout: fixed; /* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Brand</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">User Infos</h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-inline">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="search" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-primary">Search User</button>
+                <button type="submit" class="btn btn-success pull-right">Add User</button>
+
+            </form>
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>PublishDate</th>
+                    <th>Price</th>
+                    <th>Comments</th>
+                    <th>Good</th>
+                    <th>Publish</th>
+                    <th>Authors</th>
+                    <th>Managements</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.publishDate }}</td>
+                    <td>{{ book.price }}</td>
+                    <td>{{ book.comments }}</td>
+                    <td>{{ book.good }}</td>
+                    <td>{{ book.publish.name }}</td>
+                    <td>{{ book.get_authors }}</td>
+                    <td>
+                        <a class="btn btn-success btn-sm" data-toggle="modal"
+                           data-target="#user_edit_{{ book.id }}"><span class="glyphicon glyphicon-pencil"></span>
+                            Edit
+                        </a>
+                        <a class="btn btn-danger btn-sm" id="delete_{{ book.id }}"><span
+                                class="glyphicon glyphicon-trash"></span>Delete
+                        </a>
+                        <script>
+                            $('#delete_{{ book.id }}').on('click', function () {
+                                $.ajax({
+                                    url: '/delete_book/',
+                                    type: 'get',
+                                    data: {
+                                        'id':{{ book.id }}
+                                    },
+                                    success: function (res) {
+                                        alert("Delete Success!")
+                                        $('#delete_{{ book.id }}').remove()
+                                    }
+                                })
+                            })
+                        </script>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+            <div class="pull-right">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li>
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

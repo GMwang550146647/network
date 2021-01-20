@@ -38,7 +38,40 @@
             <button type="submit" class="btn btn-default">Login</button>
         </div>
     </div>
+    <div class="row form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <button type="button" class="btn btn-default" id="login_ajax">Login_Ajax</button>
+        </div>
+    </div>
 </form>
+
+<script>
+    // 特点：异步请求，局部刷新
+    $('#login_ajax').on('click', function () {
+        $.ajax({
+            url: '/login_ajax/',
+            type: "POST",
+            data: {
+                'username': $('#username').val(),
+                'password': $('#password').val(),
+                // 'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+            },
+            success: function (data) {
+                console.log(data, typeof data)
+                if (typeof data ==='string') {
+                    data = JSON.parse(data)
+                }
+                if (data['flag'].toLowerCase() === 'success!') {
+                    alert('Login Success! Received Data:' + data['ctime'])
+                    location.href='/user_management/'
+                } else {
+                    alert('Login Failure, Please enter Right password !')
+                }
+            }
+        })
+    })
+</script>
 <div class="row">
     <div class="col-sm-4 col-sm-offset-4">
         <image src="/static/images/kugou.PNG" width="100%"></image>
