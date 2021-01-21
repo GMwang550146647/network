@@ -87,7 +87,12 @@ class Book(models.Model):
     def get_authors(self):
         author_list = self.author.all()
         author_name_list = [author.name for author in author_list]
-        return ','.join(author_name_list)
+        author_id_list = [author.id for author in author_list]
+        data={
+            'ids':author_id_list,
+            'names':','.join(author_name_list),
+        }
+        return data
 
 
 class Book_Author(models.Model):
