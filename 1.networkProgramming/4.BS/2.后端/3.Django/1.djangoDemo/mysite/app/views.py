@@ -13,6 +13,23 @@ PATH = 'path'
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 
 
+def cookie_decorator(f):
+    def cookie_wrapper(request, *args, **kwargs):
+        # if request.COOKIES.get('is_login', False):
+        """
+        1.从cookie中拿出session_id字符串
+        2.去django-session表格查询对应数据
+        3.反解加密的数据
+        """
+        if request.session.get('is_login', False):
+            print("Login User:{}".format(request.session.get('username',"Nobody")))
+            return f(request, *args, **kwargs)
+        else:
+            return redirect('/login/')
+
+    return cookie_wrapper
+
+
 def my_decorator(func):
     def wrapper(*args, **kwargs):
         logging.warning("请求前....")
@@ -74,7 +91,15 @@ def login(request):
         logging.warning('username:{}'.format(username))
         logging.warning('password:{}'.format(password))
         login_success = user_login(username, password)
-
+        if login_success:
+            ret = redirect('/user_management/')
+            #cookie
+            ret.set_cookie('is_login', True)
+            #session
+            request.session['is_login']=True
+            request.session['username']=username
+            request.session['last_time']=ctime
+            return ret
     data = {
         "ctime": ctime,
         "flag": "Success!" if login_success else "Failure!"
@@ -141,12 +166,28 @@ class Login(View):
         logging.warning("POST  方法执行了")
         username = request.POST.get('username', "")
         password = request.POST.get('password', "")
-        upload(request)
         logging.warning('username:{}'.format(username))
         logging.warning('password:{}'.format(password))
-        user_add(username, password)
-        self.data['flag'] = "Failure!"
-        return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
+        login_success = user_login(username, password)
+        if login_success:
+            ret = redirect('/user_management/')
+            #cookie
+            ret.set_cookie('is_login', True,max_age=10)
+            #session
+            """
+            1.生成了session_id： 随机字符串1
+            2.在cookie里面加上了一个键值对 session_id:随机字符串1
+            3.将用户数据加密并保存到django-session表里面（session_key,session_data,expire_date）
+            """
+            request.session['is_login']=True
+            request.session['username']=username
+            request.session['last_time']=self.data['ctime']
+            request.session.set_expiry(10)
+            # request.session.setdefault('k1', 123)  # 存在则不设置
+            return ret
+        else:
+            self.data['flag'] = "Failure!"
+            return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
 
 
 def signup(request):
@@ -183,6 +224,8 @@ def signup(request):
         # return HttpResponse('other message')
         return render(request, "signup.html", data)  # render，渲染html页面文件并返回给浏览器
 
+
+@cookie_decorator
 def user_management(request):
     users = get()
     return render(request, 'user_management.html', {'users': users})
@@ -219,7 +262,7 @@ def upload(request):
     for filei in request.FILES:
         file_obj = request.FILES.get(filei, None)
         file_pathi = os.path.join(dest_dir, file_obj.name)
-        logging.warning("Receive Name: {} -> File : {}".format(filei,file_obj.name))
+        logging.warning("Receive Name: {} -> File : {}".format(filei, file_obj.name))
         if file_obj:
             with open(file_pathi, 'wb') as f:
                 for chunk in file_obj.chunks():
@@ -227,6 +270,7 @@ def upload(request):
             logging.warning('{}: Saved to {}'.format(filei, file_pathi))
         else:
             logging.error("No File To Save!")
+
 
 def database(request):
     SingleTableManagement().run()
@@ -277,12 +321,15 @@ def template_inherit1(request):
 def template_inherit2(request):
     return render(request, 'template_inherit2.html')
 
+
 class UploadFile(View):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-    def get(self,request):
-        return render(request,'upload_file_ajax.html')
-    def post(self,request):
+
+    def get(self, request):
+        return render(request, 'upload_file_ajax.html')
+
+    def post(self, request):
         try:
             logging.warning("Received POST DATA: {}".format(request.POST))
             logging.warning("Received FILES DATA: {}".format(request.FILES))
