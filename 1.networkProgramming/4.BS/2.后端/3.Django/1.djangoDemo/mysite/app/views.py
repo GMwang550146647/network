@@ -7,11 +7,64 @@ from django.http import JsonResponse
 from .models import SingleTableManagement, user_add, user_login, get, delete, edit
 from django.views import View
 from django.utils.decorators import method_decorator
+from django import forms
+from django.forms import widgets
+from app import models
+from django.core.validators import RegexValidator
 
 PATH = 'path'
 # Create your views here.
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 
+
+
+class SignupForm(forms.Form):
+    username=forms.CharField(
+        min_length=4,
+        max_length=20,
+        label="username",
+        error_messages = {
+            "required": "不能为空",
+            "invalid": "格式错误",
+            "min_length": "用户名最短4位最多20位"
+        },
+        validators=[RegexValidator("^[a-zA-Z]")],
+        widget=forms.widgets.TextInput(attrs={'class': 'form-control'})
+    )
+    password=forms.CharField(
+        min_length=4,
+        max_length=20,
+        label="password",
+        widget=forms.widgets.PasswordInput(attrs={'class': 'form-control'}, render_value=True),
+        error_messages={
+            "required": "不能为空",
+            "invalid": "格式错误",
+            "min_length": "密码最短4位最多20位"
+        },
+    )
+    normal = forms.fields.ChoiceField(  #注意，单选框用的是ChoiceField，并且里面的插件是Select，不然验证的时候会报错， Select a valid choice的错误。
+        choices=((1, "Yes"), (2, "No") ),
+        label="normal",
+        initial=1,
+        widget=forms.widgets.Select()
+    )
+    hobby = forms.fields.MultipleChoiceField( #多选框的时候用MultipleChoiceField，并且里面的插件用的是SelectMultiple，不然验证的时候会报错。
+        choices=((1, "Python"), (2, "C++"), (3, "Java"), ),
+        label="hobby",
+        initial=[1],
+        widget=forms.widgets.SelectMultiple()
+    )
+    date = forms.DateField(widget=widgets.TextInput(attrs={'type': 'date'}))
+
+def signup_form(request):
+    form_obj = SignupForm()
+    if request.method == "POST":
+        # 实例化form对象的时候，把post提交过来的数据直接传进去
+        form_obj = SignupForm(data=request.POST)  #既然传过来的input标签的name属性值和form类对应的字段名是一样的，所以接过来后，form就取出对应的form字段名相同的数据进行form校验
+        # 调用form_obj校验数据的方法
+        if form_obj.is_valid():
+            return HttpResponse("注册成功")
+    return render(request, "signup_form.html", {"form_obj": form_obj})
 
 def cookie_decorator(f):
     def cookie_wrapper(request, *args, **kwargs):
@@ -172,7 +225,7 @@ class Login(View):
         if login_success:
             ret = redirect('/user_management/')
             #cookie
-            ret.set_cookie('is_login', True,max_age=10)
+            ret.set_cookie('is_login', True,max_age=1000)
             #session
             """
             1.生成了session_id： 随机字符串1
@@ -182,7 +235,7 @@ class Login(View):
             request.session['is_login']=True
             request.session['username']=username
             request.session['last_time']=self.data['ctime']
-            request.session.set_expiry(10)
+            request.session.set_expiry(1000)
             # request.session.setdefault('k1', 123)  # 存在则不设置
             return ret
         else:

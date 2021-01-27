@@ -38,7 +38,8 @@ urlpatterns = [
     # 2.正则路由，正则匹配
     re_path('^login1/', app_view.login, name='lg'),  # 只要这个正则match 就会执行这里 #->别名 用于反向解释！就是把页面中的 {% url 'lg' [args] %} 解析为  'login/'
     re_path('^login_ajax/', app_view.login_ajax),
-    re_path('^login/', app_view.Login.as_view()),  # 只要这个正则match 就会执行这里
+    re_path('^login/', app_view.Login.as_view(),name='login'),  # 只要这个正则match 就会执行这里
+    re_path('^signup_form/', app_view.signup_form),  # 只要这个正则match 就会执行这里
     # url('^login/.*', views.login),  # 只要这个正则match 就会执行这里
     url('^delete_user/(\d+)/', app_view.delete_user,name='delete'),
     url('^edit_user/', app_view.edit_user,name='edit'),

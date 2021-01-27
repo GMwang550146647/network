@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'demo1',
     'books',
 ]
-
+# from django.contrib.sessions.middleware import SessionMiddleware
+# from django.middleware.csrf import CsrfViewMiddleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -49,6 +50,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #自定义中间件
+    # "utils.middlewares.MyMiddleware"
+    "utils.middlewares.SessionAuth"
 ]
 
 ROOT_URLCONF = 'mysite.urls'
