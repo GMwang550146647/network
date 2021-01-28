@@ -5,7 +5,7 @@
     <title>Books Management</title>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <!--<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">-->
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <!--    <link rel="stylesheet" href="/static/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
@@ -133,22 +133,35 @@
                     <td>{{ book.publish.name }}</td>
                     <td>{{ book.get_authors.names }}</td>
                     <td>
-                        <form action="/add_book/" method="get">
+                        <form action="/add_book/" method="get" id="book_{{ book.id }}">
+                            <input type="text" style="display: none" name="action" value="add_book">
                             <input type="text" style="display: none" name="id" value="{{ book.id }}">
                             <input type="text" style="display: none" name="title" value="{{ book.title }}">
                             <input type="text" style="display: none" name="publishDate" value="{{ book.publishDate }}">
                             <input type="text" style="display: none" name="price" value="{{ book.price }}">
                             <input type="text" style="display: none" name="publish_id" value="{{ book.publish.id }}">
-                            <input type="text" style="display: none" name="author_ids" value="{{ book.get_authors.ids }}">
-                            <button type='submit' class="btn btn-success btn-sm" id="edit"><span class="glyphicon glyphicon-pencil"></span>
+                            <input type="text" style="display: none" name="author_ids"
+                                   value="{{ book.get_authors.ids }}">
+                            <button type='submit' class="btn btn-success btn-sm" id="edit"><span
+                                    class="glyphicon glyphicon-pencil"></span>
                                 Edit
+                            </button>
+                            <button type='button' class="btn btn-success btn-sm" id="edit_modelform"><span
+                                    class="glyphicon glyphicon-pencil"></span>
+                                EMF
                             </button>
                             <a class="btn btn-danger btn-sm" id="delete_{{ book.id }}"><span
                                     class="glyphicon glyphicon-trash"></span>Delete
                             </a>
+
                         </form>
 
-
+                        <script>
+                            $("#edit_modelform").on("click", function () {
+                                $('#book_{{ book.id }}').children('[name=action]').attr('value','add_book_modelform')
+                                $('#edit').click()
+                            })
+                        </script>
                         <script>
                             $('#delete_{{ book.id }}').on('click', function () {
                                 $.ajax({

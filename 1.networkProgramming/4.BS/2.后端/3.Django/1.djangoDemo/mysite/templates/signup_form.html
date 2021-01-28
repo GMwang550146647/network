@@ -20,7 +20,7 @@
     <div class="col-sm-4 col-sm-offset-4"><h4>登录状态:{{ flag }}</h4></div>
 </div>
 <form class="form-horizontal" role="form" action="/signup_form/" method="post" enctype="multipart/form-data" novalidate>
-<!--<form class="form-horizontal" role="form" action="/signup/" method="post" enctype="multipart/form-data">-->
+    <!--<form class="form-horizontal" role="form" action="/signup/" method="post" enctype="multipart/form-data">-->
     {% csrf_token %}
     <div class="row form-group">
         <div class="col-sm-3 control-label">
@@ -40,27 +40,26 @@
     </div>
     <div class="row form-group">
         <div class="col-sm-3 control-label">
+            <label for="{{ form_obj.re_password.id_for_label }}">{{ form_obj.re_password.label }}</label>
+        </div>
+        <div class="col-sm-6">
+            {{ form_obj.re_password }} {{ form_obj.re_password.errors.0 }}
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-3 control-label">
             <label for="{{ form_obj.normal.id_for_label }}">{{ form_obj.normal.label }}</label>
         </div>
         <div class="col-sm-6">
             {{ form_obj.normal }} {{ form_obj.normal.errors.0 }}
         </div>
     </div>
-        <div class="row form-group">
+    <div class="row form-group">
         <div class="col-sm-3 control-label">
             <label for="{{ form_obj.hobby.id_for_label }}">{{ form_obj.hobby.label }}</label>
         </div>
         <div class="col-sm-6">
             {{ form_obj.hobby }} {{ form_obj.hobby.errors.0 }}
-        </div>
-    </div>
-        </div>
-        <div class="row form-group">
-        <div class="col-sm-3 control-label">
-            <label for="{{ form_obj.date.id_for_label }}">{{ form_obj.date.label }}</label>
-        </div>
-        <div class="col-sm-6">
-            {{ form_obj.date }} {{ form_obj.date.errors.0 }}
         </div>
     </div>
     <div class="row form-group">

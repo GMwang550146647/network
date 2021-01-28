@@ -10,20 +10,23 @@ from django.utils.decorators import method_decorator
 from django import forms
 from django.forms import widgets
 from app import models
-from django.core.validators import RegexValidator
-
+from django.core.validators import RegexValidator, ValidationError
+from books import models as BookModels
 PATH = 'path'
 # Create your views here.
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 
 
 
+"""
+1.自定义的 Form 检查
+"""
 class SignupForm(forms.Form):
-    username=forms.CharField(
+    username = forms.CharField(
         min_length=4,
         max_length=20,
         label="username",
-        error_messages = {
+        error_messages={
             "required": "不能为空",
             "invalid": "格式错误",
             "min_length": "用户名最短4位最多20位"
@@ -31,7 +34,7 @@ class SignupForm(forms.Form):
         validators=[RegexValidator("^[a-zA-Z]")],
         widget=forms.widgets.TextInput(attrs={'class': 'form-control'})
     )
-    password=forms.CharField(
+    password = forms.CharField(
         min_length=4,
         max_length=20,
         label="password",
@@ -42,29 +45,68 @@ class SignupForm(forms.Form):
             "min_length": "密码最短4位最多20位"
         },
     )
-    normal = forms.fields.ChoiceField(  #注意，单选框用的是ChoiceField，并且里面的插件是Select，不然验证的时候会报错， Select a valid choice的错误。
-        choices=((1, "Yes"), (2, "No") ),
+    re_password = forms.CharField(
+        min_length=4,
+        max_length=20,
+        label="re_password",
+        widget=forms.widgets.PasswordInput(attrs={'class': 'form-control'}, render_value=True),
+        error_messages={
+            "required": "不能为空",
+            "invalid": "格式错误",
+            "min_length": "密码最短4位最多20位"
+        },
+    )
+    normal = forms.fields.ChoiceField(  # 注意，单选框用的是ChoiceField，并且里面的插件是Select，不然验证的时候会报错， Select a valid choice的错误。
+        choices=((1, "Yes"), (2, "No")),
         label="normal",
         initial=1,
         widget=forms.widgets.Select()
     )
-    hobby = forms.fields.MultipleChoiceField( #多选框的时候用MultipleChoiceField，并且里面的插件用的是SelectMultiple，不然验证的时候会报错。
-        choices=((1, "Python"), (2, "C++"), (3, "Java"), ),
+    hobby = forms.fields.MultipleChoiceField(  # 多选框的时候用MultipleChoiceField，并且里面的插件用的是SelectMultiple，不然验证的时候会报错。
+        choices=((1, "Python"), (2, "C++"), (3, "Java"),),
         label="hobby",
         initial=[1],
         widget=forms.widgets.SelectMultiple()
     )
-    date = forms.DateField(widget=widgets.TextInput(attrs={'type': 'date'}))
+    # date = forms.DateField(widget=widgets.TextInput(attrs={'type': 'date'}))
+
+    #用models里面的数据
+    publishs=forms.ModelChoiceField(
+        label='出版社',
+        queryset=BookModels.Publish.objects.all()
+    )
+    authors=forms.ModelChoiceField(
+        label='作者',
+        queryset=BookModels.Author.objects.all()
+    )
+
+    def clean(self):
+        password_value = self.cleaned_data.get('password')
+        re_password_value = self.cleaned_data.get('re_password')
+        # 1.密码验证 (也可以做很多字符验证...)
+        if password_value == re_password_value:
+            return self.cleaned_data  # 全局钩子要返回所有的数据
+        else:
+            self.add_error('re_password', '两次密码不一致')
+            # 在re_password这个字段的错误列表中加上一个错误，并且clean_data里面会自动清除这个re_password的值，所以打印clean_data的时候会看不到它
+            raise ValidationError('两次密码不一致')
+
 
 def signup_form(request):
     form_obj = SignupForm()
     if request.method == "POST":
         # 实例化form对象的时候，把post提交过来的数据直接传进去
-        form_obj = SignupForm(data=request.POST)  #既然传过来的input标签的name属性值和form类对应的字段名是一样的，所以接过来后，form就取出对应的form字段名相同的数据进行form校验
+        form_obj = SignupForm(
+            data=request.POST)  # 既然传过来的input标签的name属性值和form类对应的字段名是一样的，所以接过来后，form就取出对应的form字段名相同的数据进行form校验
         # 调用form_obj校验数据的方法
         if form_obj.is_valid():
             return HttpResponse("注册成功")
     return render(request, "signup_form.html", {"form_obj": form_obj})
+
+"""
+2.利用model 的限制属性自动生成（见books）
+"""
+
 
 def cookie_decorator(f):
     def cookie_wrapper(request, *args, **kwargs):
@@ -75,7 +117,7 @@ def cookie_decorator(f):
         3.反解加密的数据
         """
         if request.session.get('is_login', False):
-            print("Login User:{}".format(request.session.get('username',"Nobody")))
+            print("Login User:{}".format(request.session.get('username', "Nobody")))
             return f(request, *args, **kwargs)
         else:
             return redirect('/login/')
@@ -146,12 +188,12 @@ def login(request):
         login_success = user_login(username, password)
         if login_success:
             ret = redirect('/user_management/')
-            #cookie
+            # cookie
             ret.set_cookie('is_login', True)
-            #session
-            request.session['is_login']=True
-            request.session['username']=username
-            request.session['last_time']=ctime
+            # session
+            request.session['is_login'] = True
+            request.session['username'] = username
+            request.session['last_time'] = ctime
             return ret
     data = {
         "ctime": ctime,
@@ -224,18 +266,18 @@ class Login(View):
         login_success = user_login(username, password)
         if login_success:
             ret = redirect('/user_management/')
-            #cookie
-            ret.set_cookie('is_login', True,max_age=1000)
-            #session
+            # cookie
+            ret.set_cookie('is_login', True, max_age=10000)
+            # session
             """
             1.生成了session_id： 随机字符串1
             2.在cookie里面加上了一个键值对 session_id:随机字符串1
             3.将用户数据加密并保存到django-session表里面（session_key,session_data,expire_date）
             """
-            request.session['is_login']=True
-            request.session['username']=username
-            request.session['last_time']=self.data['ctime']
-            request.session.set_expiry(1000)
+            request.session['is_login'] = True
+            request.session['username'] = username
+            request.session['last_time'] = self.data['ctime']
+            request.session.set_expiry(10000)
             # request.session.setdefault('k1', 123)  # 存在则不设置
             return ret
         else:
