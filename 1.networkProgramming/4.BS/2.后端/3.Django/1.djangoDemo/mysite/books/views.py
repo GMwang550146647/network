@@ -107,7 +107,7 @@ class AddBook(View):
         book_id = data.get('id', '')
         if request_url == 'add_book':
             if book_id:
-                # book_id
+                # book_id update
                 Book.objects.filter(id=book_id).update(
                     title=data.get('title', 'Error'),
                     publishDate=data.get('publishDate', '2020-01-01'),
@@ -128,16 +128,40 @@ class AddBook(View):
                 new_obj.author.add(*authors)
             return redirect('/book_system_ajax/')
         else:
+            ################ orm 版本###############
+            # if book_id:
+            #     # book_id update
+            #     book_form_obj = BookForm(request.POST)
+            #     if book_form_obj.is_valid():
+            #         book_form_obj.cleaned_data.pop('re_title')
+            #         authors = book_form_obj.cleaned_data.pop('author')
+            #         Book.objects.filter(id=book_id).update(
+            #             **book_form_obj.cleaned_data
+            #         )
+            #         Book.objects.get(id=book_id).author.set(authors)
+            #         return redirect('/book_system_ajax/')
+            #     else:
+            #         return render(request,'{}.html'.format(request_url),{'book':book_form_obj})
+            # else:
+            #     # create
+            #     book_form_obj = BookForm(request.POST)
+            #     if book_form_obj.is_valid():
+            #         book_form_obj.cleaned_data.pop('re_title')
+            #         authors = book_form_obj.cleaned_data.pop('author')
+            #         new_obj = Book.objects.create(
+            #             **book_form_obj.cleaned_data
+            #         )
+            #         new_obj.author.add(*authors)
+            #         return redirect('/book_system_ajax/')
+            #     else:
+            #         return render(request,'{}.html'.format(request_url),{'book':book_form_obj})
+
+            ############Model Form 版本############
             if book_id:
-                # book_id
-                book_form_obj = BookForm(request.POST)
+                # book_id update
+                book_form_obj = BookForm(request.POST,instance=Book.objects.filter(id=book_id))
                 if book_form_obj.is_valid():
-                    book_form_obj.cleaned_data.pop('re_title')
-                    authors = book_form_obj.cleaned_data.pop('author')
-                    Book.objects.filter(id=book_id).update(
-                        **book_form_obj.cleaned_data
-                    )
-                    Book.objects.get(id=book_id).author.set(authors)
+                    book_form_obj.save()
                     return redirect('/book_system_ajax/')
                 else:
                     return render(request,'{}.html'.format(request_url),{'book':book_form_obj})
@@ -145,12 +169,7 @@ class AddBook(View):
                 # create
                 book_form_obj = BookForm(request.POST)
                 if book_form_obj.is_valid():
-                    book_form_obj.cleaned_data.pop('re_title')
-                    authors = book_form_obj.cleaned_data.pop('author')
-                    new_obj = Book.objects.create(
-                        **book_form_obj.cleaned_data
-                    )
-                    new_obj.author.add(*authors)
+                    book_form_obj.save()
                     return redirect('/book_system_ajax/')
                 else:
                     return render(request,'{}.html'.format(request_url),{'book':book_form_obj})

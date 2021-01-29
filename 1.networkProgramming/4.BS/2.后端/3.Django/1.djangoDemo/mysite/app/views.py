@@ -12,15 +12,19 @@ from django.forms import widgets
 from app import models
 from django.core.validators import RegexValidator, ValidationError
 from books import models as BookModels
+import math
+# 分页
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 PATH = 'path'
 # Create your views here.
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 
-
-
 """
 1.自定义的 Form 检查
 """
+
+
 class SignupForm(forms.Form):
     username = forms.CharField(
         min_length=4,
@@ -70,12 +74,12 @@ class SignupForm(forms.Form):
     )
     # date = forms.DateField(widget=widgets.TextInput(attrs={'type': 'date'}))
 
-    #用models里面的数据
-    publishs=forms.ModelChoiceField(
+    # 用models里面的数据
+    publishs = forms.ModelChoiceField(
         label='出版社',
         queryset=BookModels.Publish.objects.all()
     )
-    authors=forms.ModelChoiceField(
+    authors = forms.ModelChoiceField(
         label='作者',
         queryset=BookModels.Author.objects.all()
     )
@@ -102,6 +106,7 @@ def signup_form(request):
         if form_obj.is_valid():
             return HttpResponse("注册成功")
     return render(request, "signup_form.html", {"form_obj": form_obj})
+
 
 """
 2.利用model 的限制属性自动生成（见books）
@@ -324,6 +329,81 @@ def signup(request):
 def user_management(request):
     users = get()
     return render(request, 'user_management.html', {'users': users})
+
+
+class UserManagementPagesFront(View):
+    """
+    前端实现分页，服务器负载重
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user_list = models.UserInfo.objects.all()
+        self.paginator = Paginator(self.user_list, 10)
+        print("count:", self.paginator.count)  # 数据总数
+        print("num_pages", self.paginator.num_pages)  # 总页数
+        print("page_range", self.paginator.page_range)  # 页码的列表
+
+    def get(self, request):
+        currentPage = int(request.GET.get("current_page", 1))
+        try:
+            user_list = self.paginator.page(currentPage)
+        except PageNotAnInteger:
+            user_list = self.paginator.page(1)
+        except EmptyPage:
+            user_list = self.paginator.page(self.paginator.num_pages)
+
+        return render(request, "user_management_pages_front.html",
+                      {"user_list": user_list, "paginator": self.paginator, "current_page": currentPage})
+
+    def post(self, request):
+        currentPage = int(request.POST.get("page", 1))
+        try:
+            user_list = self.paginator.page(currentPage)
+        except PageNotAnInteger:
+            user_list = self.paginator.page(1)
+        except EmptyPage:
+            user_list = self.paginator.page(self.paginator.num_pages)
+
+        return render(request, "user_management_pages_front.html",
+                      {"user_list": user_list, "paginator": self.paginator, "current_page": currentPage})
+
+
+class UserManagementPagesBack(View):
+    """
+    后端实现分页，服务器负载不重
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.total_count = models.UserInfo.objects.count()
+        self.num_display_pages = 5
+        self.num_display_users = 10
+        self.num_max_pages=math.ceil(self.total_count/self.num_display_users)
+
+        self.user_list = models.UserInfo.objects.all()
+        self.paginator = Paginator(self.user_list, 10)
+        print("count:", self.paginator.count)  # 数据总数
+        print("num_pages", self.paginator.num_pages)  # 总页数
+        print("page_range", self.paginator.page_range)  # 页码的列表
+
+    def get_pages(self,current_page):
+        if current_page>self.max_pages:
+            current_page=self.max_pages
+
+        elif current_page<=0:
+            current_page=1
+        else:
+
+    def get(self, request):
+        currentPage = int(request.GET.get("current_page", 1))
+
+        return render(request, "user_management_pages_back.html",
+                      {"user_list": user_list, "paginator": self.paginator, "current_page": currentPage})
+
+    def post(self, request):
+        currentPage = int(request.POST.get("page", 1))
+
+        return render(request, "user_management_pages_back.html",
+                      {"user_list": user_list,  "current_page": currentPage})
 
 
 def delete_user(request, id):

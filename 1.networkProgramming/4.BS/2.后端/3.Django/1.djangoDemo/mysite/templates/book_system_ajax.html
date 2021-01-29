@@ -142,11 +142,11 @@
                             <input type="text" style="display: none" name="publish_id" value="{{ book.publish.id }}">
                             <input type="text" style="display: none" name="author_ids"
                                    value="{{ book.get_authors.ids }}">
-                            <button type='submit' class="btn btn-success btn-sm" id="edit"><span
+                            <button type='submit' class="btn btn-success btn-sm" id="edit_{{ book.id }}"><span
                                     class="glyphicon glyphicon-pencil"></span>
                                 Edit
                             </button>
-                            <button type='button' class="btn btn-success btn-sm" id="edit_modelform"><span
+                            <button type='button' class="btn btn-success btn-sm" id="edit_modelform_{{ book.id }}"><span
                                     class="glyphicon glyphicon-pencil"></span>
                                 EMF
                             </button>
@@ -157,9 +157,9 @@
                         </form>
 
                         <script>
-                            $("#edit_modelform").on("click", function () {
+                            $("#edit_modelform_{{ book.id }}").on("click", function () {
                                 $('#book_{{ book.id }}').children('[name=action]').attr('value','add_book_modelform')
-                                $('#edit').click()
+                                $('#edit_{{ book.id }}').click()
                             })
                         </script>
                         <script>

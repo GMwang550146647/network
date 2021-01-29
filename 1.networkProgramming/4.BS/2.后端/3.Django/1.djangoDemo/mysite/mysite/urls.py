@@ -30,6 +30,8 @@ urlpatterns = [
     path('template_inherit1/', app_view.template_inherit1),
     path('template_inherit2/', app_view.template_inherit2),
     path('user_management/', app_view.user_management),
+    path('user_management_pages_front/', app_view.UserManagementPagesFront.as_view()),
+    path('user_management_pages_back/', app_view.UserManagementPagesBack.as_view()),
     path('upload_file_ajax/', app_view.UploadFile.as_view()),
     path('book_system_ajax/', book_view.BookSystemAjax.as_view()),
     path('delete_book/', book_view.DeleteBook.as_view()),
