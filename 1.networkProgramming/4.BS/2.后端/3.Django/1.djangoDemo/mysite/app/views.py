@@ -2,6 +2,7 @@ import os
 import datetime
 import logging
 import json
+from io import BytesIO
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.http import JsonResponse
 from .models import SingleTableManagement, user_add, user_login, get, delete, edit
@@ -13,9 +14,11 @@ from app import models
 from django.core.validators import RegexValidator, ValidationError
 from books import models as BookModels
 import math
-# 分页
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+# 分页
+from app.utility import CheckCode
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils.safestring import mark_safe
 PATH = 'path'
 # Create your views here.
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -266,10 +269,11 @@ class Login(View):
         logging.warning("POST  方法执行了")
         username = request.POST.get('username', "")
         password = request.POST.get('password', "")
+        valid_code=request.POST.get('check_code',"")
         logging.warning('username:{}'.format(username))
         logging.warning('password:{}'.format(password))
         login_success = user_login(username, password)
-        if login_success:
+        if login_success and valid_code==request.session['valid_code']:
             ret = redirect('/user_management/')
             # cookie
             ret.set_cookie('is_login', True, max_age=10000)
@@ -288,6 +292,16 @@ class Login(View):
         else:
             self.data['flag'] = "Failure!"
             return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
+
+class GetCheckCode(View):
+    def get(self,request):
+        img,code=CheckCode.check_code()
+        f=BytesIO()
+        img.save(f, "png")
+        data = f.getvalue()
+        request.session['valid_code']=code
+        print(code)
+        return HttpResponse(data)
 
 
 def signup(request):
@@ -335,6 +349,7 @@ class UserManagementPagesFront(View):
     """
     前端实现分页，服务器负载重
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_list = models.UserInfo.objects.all()
@@ -372,38 +387,81 @@ class UserManagementPagesBack(View):
     """
     后端实现分页，服务器负载不重
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.total_count = models.UserInfo.objects.count()
         self.num_display_pages = 5
         self.num_display_users = 10
-        self.num_max_pages=math.ceil(self.total_count/self.num_display_users)
+        self.num_max_pages = math.ceil(self.total_count / self.num_display_users)
 
-        self.user_list = models.UserInfo.objects.all()
-        self.paginator = Paginator(self.user_list, 10)
-        print("count:", self.paginator.count)  # 数据总数
-        print("num_pages", self.paginator.num_pages)  # 总页数
-        print("page_range", self.paginator.page_range)  # 页码的列表
-
-    def get_pages(self,current_page):
-        if current_page>self.max_pages:
-            current_page=self.max_pages
-
-        elif current_page<=0:
-            current_page=1
+    def get_pages(self, current_page):
+        half_page = self.num_display_pages // 2
+        if current_page > self.num_max_pages - (self.num_display_pages - half_page):
+            current_page = min(self.num_max_pages,current_page)
+            page_right = self.num_max_pages
+            page_left = max(1, self.num_max_pages - self.num_display_pages+1)
+        elif current_page < 1 + half_page:
+            current_page = max(1,current_page)
+            page_left = 1
+            page_right = min(self.num_max_pages, self.num_display_pages)
         else:
+            page_left = current_page - half_page
+            page_right = page_left + self.num_display_pages -1
+        pages = list(range(page_left, page_right+1))
+        return current_page, pages
 
-    def get(self, request):
-        currentPage = int(request.GET.get("current_page", 1))
+    # def get(self, request):
+    #     """
+    #     非封装版本，navigation 写在html里面
+    #     :param request:
+    #     :return:
+    #     """
+    #     current_page = int(request.GET.get("current_page", 1))
+    #     current_page, pages = self.get_pages(current_page)
+    #     user_list = models.UserInfo.objects.all()[
+    #                 (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+    #     return render(request, "user_management_pages_back.html",
+    #                   {"user_list": user_list, "pages": pages, "current_page": current_page,
+    #                    "max_page": self.num_max_pages})
 
-        return render(request, "user_management_pages_back.html",
-                      {"user_list": user_list, "paginator": self.paginator, "current_page": currentPage})
+    def get(self,request):
+        """
+        封装版本 navigation 控件写在代码里面
+        :param request:
+        :return:
+        """
+        def create_nav(template,current_page,pages):
+            nav_html = """<nav aria-label="Page navigation"><ul class="pagination">{}</ul></nav>"""
+            left_right_html = """<li class="previous {}" ><a href="/{}/?current_page={}"><span aria-hidden="true">{}</span></a></li>"""
+            index_html = """<li class="item {}"><a href="/{}/?current_page={}">{}</a></li>"""
+            content = "{} {} {}".format(
+                left_right_html.format('disabled' if current_page == pages[0] else '', template, current_page - 1,"&laquo;"),
+                "".join([index_html.format(
+                    'active' if page_i == current_page else "", template, page_i, page_i) for page_i in pages]),
+                left_right_html.format('disabled' if current_page == pages[-1] else '', template,
+                                       current_page + 1, "&raquo;"),
+            )
+            nav = nav_html.format(content)
+            return nav
+        current_page = int(request.GET.get("current_page", 1))
+        current_page, pages = self.get_pages(current_page)
+        user_list = models.UserInfo.objects.all()[
+                            (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+        req_url="user_management_pages_back"
+        nav=create_nav(req_url,current_page,pages)
+
+        return render(request,"user_management_pages_back1.html",{'nav':nav,"user_list": user_list})
+
 
     def post(self, request):
-        currentPage = int(request.POST.get("page", 1))
-
+        current_page = int(request.POST.get("current_page", 1))
+        current_page, pages = self.get_pages(current_page)
+        user_list = models.UserInfo.objects.all()[
+                    (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
         return render(request, "user_management_pages_back.html",
-                      {"user_list": user_list,  "current_page": currentPage})
+                      {"user_list": user_list, "pages": pages, "current_page": current_page,
+                       "max_page": self.num_max_pages})
 
 
 def delete_user(request, id):

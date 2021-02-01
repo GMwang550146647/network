@@ -36,6 +36,7 @@ urlpatterns = [
     path('book_system_ajax/', book_view.BookSystemAjax.as_view()),
     path('delete_book/', book_view.DeleteBook.as_view()),
     path('add_book/', book_view.AddBook.as_view(),name='add_book'),
+    path('get_check_code/', app_view.GetCheckCode.as_view()),
 
     # 2.正则路由，正则匹配
     re_path('^login1/', app_view.login, name='lg'),  # 只要这个正则match 就会执行这里 #->别名 用于反向解释！就是把页面中的 {% url 'lg' [args] %} 解析为  'login/'
