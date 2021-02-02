@@ -14,7 +14,7 @@ class MyMiddleware(MiddlewareMixin):
 class SessionAuth(MiddlewareMixin):
     def process_request(self, request):
         # 设置全局登录验证设置白名单
-        white_list = [reverse('login'), '/admin/', '/admin/login/']
+        white_list = [reverse('login'), '/admin/', '/admin/login/','/get_check_code/']
         if request.path in white_list:
             return None
         is_login = request.session.get('is_login', False)
