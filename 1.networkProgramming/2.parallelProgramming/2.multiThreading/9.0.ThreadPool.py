@@ -48,7 +48,12 @@ def multi_threading(n_threads=4, n_tasks=20):
         # 以下三种方式都合法
         # tp.submit(thread_task,task_id=i,info='gmwang')
         # tp.submit(thread_task,'gmwang',i)
-        tpi = tp.submit(thread_task, 'gmwang', task_id=i)
+        kwargs={
+            'task_id':i,
+            'info':'gmwang'
+        }
+        tpi = tp.submit(thread_task, **kwargs)
+        # tpi = tp.submit(thread_task, 'gmwang', task_id=i)
         future_l.append(tpi)
     # 异步非阻塞
     result = [tpi.result() for tpi in future_l]

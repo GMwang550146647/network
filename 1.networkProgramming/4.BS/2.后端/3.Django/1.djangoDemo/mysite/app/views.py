@@ -19,6 +19,7 @@ import math
 from app.utility import CheckCode
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.safestring import mark_safe
+
 PATH = 'path'
 # Create your views here.
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -269,11 +270,11 @@ class Login(View):
         logging.warning("POST  方法执行了")
         username = request.POST.get('username', "")
         password = request.POST.get('password', "")
-        valid_code=request.POST.get('check_code',"")
+        valid_code = request.POST.get('check_code', "")
         logging.warning('username:{}'.format(username))
         logging.warning('password:{}'.format(password))
         login_success = user_login(username, password)
-        if login_success and valid_code==request.session['valid_code']:
+        if login_success and valid_code == request.session['valid_code']:
             ret = redirect('/user_management/')
             # cookie
             ret.set_cookie('is_login', True, max_age=10000)
@@ -293,13 +294,14 @@ class Login(View):
             self.data['flag'] = "Failure!"
             return render(request, "login.html", self.data)  # render，渲染html页面文件并返回给浏览器
 
+
 class GetCheckCode(View):
-    def get(self,request):
-        img,code=CheckCode.check_code()
-        f=BytesIO()
+    def get(self, request):
+        img, code = CheckCode.check_code()
+        f = BytesIO()
         img.save(f, "png")
         data = f.getvalue()
-        request.session['valid_code']=code
+        request.session['valid_code'] = code
         print(code)
         return HttpResponse(data)
 
@@ -390,69 +392,92 @@ class UserManagementPagesBack(View):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.total_count = models.UserInfo.objects.count()
+        self.total_count = -1
         self.num_display_pages = 5
         self.num_display_users = 10
-        self.num_max_pages = math.ceil(self.total_count / self.num_display_users)
 
     def get_pages(self, current_page):
+
+        num_max_pages = math.ceil(self.total_count / self.num_display_users)
         half_page = self.num_display_pages // 2
-        if current_page > self.num_max_pages - (self.num_display_pages - half_page):
-            current_page = min(self.num_max_pages,current_page)
-            page_right = self.num_max_pages
-            page_left = max(1, self.num_max_pages - self.num_display_pages+1)
+        if current_page > num_max_pages - (self.num_display_pages - half_page):
+            current_page = min(num_max_pages, current_page)
+            page_right = num_max_pages
+            page_left = max(1, num_max_pages - self.num_display_pages + 1)
         elif current_page < 1 + half_page:
-            current_page = max(1,current_page)
+            current_page = max(1, current_page)
             page_left = 1
-            page_right = min(self.num_max_pages, self.num_display_pages)
+            page_right = min(num_max_pages, self.num_display_pages)
         else:
             page_left = current_page - half_page
-            page_right = page_left + self.num_display_pages -1
-        pages = list(range(page_left, page_right+1))
+            page_right = page_left + self.num_display_pages - 1
+        pages = list(range(page_left, page_right + 1))
         return current_page, pages
 
-    # def get(self, request):
-    #     """
-    #     非封装版本，navigation 写在html里面
-    #     :param request:
-    #     :return:
-    #     """
-    #     current_page = int(request.GET.get("current_page", 1))
-    #     current_page, pages = self.get_pages(current_page)
-    #     user_list = models.UserInfo.objects.all()[
-    #                 (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
-    #     return render(request, "user_management_pages_back.html",
-    #                   {"user_list": user_list, "pages": pages, "current_page": current_page,
-    #                    "max_page": self.num_max_pages})
+    def get(self, request):
+        """
+        非封装版本，navigation 写在html里面
+        :param request:
+        :return:
+        """
+        kw = request.GET.get('kw', "")
+        if kw:
+            self.total_count = models.UserInfo.objects.filter(username__contains=kw).count()
+        else:
+            self.total_count = models.UserInfo.objects.all().count()
+        current_page = int(request.GET.get("current_page", 1))
+        current_page, pages = self.get_pages(current_page)
+        num_max_pages = math.ceil(self.total_count / self.num_display_users)
+        if kw:
+            user_list = models.UserInfo.objects.filter(username__contains=kw)[
+                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+        else:
+            user_list = models.UserInfo.objects.all()[
+                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+        return render(request, "user_management_pages_back.html",
+                      {"user_list": user_list, "pages": pages, "current_page": current_page,
+                       "max_page": num_max_pages,"kw":kw})
 
-    def get(self,request):
+    def get(self, request):
         """
         封装版本 navigation 控件写在代码里面
         :param request:
         :return:
         """
-        def create_nav(template,current_page,pages):
+
+        def create_nav(template, current_page, pages):
             nav_html = """<nav aria-label="Page navigation"><ul class="pagination">{}</ul></nav>"""
-            left_right_html = """<li class="previous {}" ><a href="/{}/?current_page={}"><span aria-hidden="true">{}</span></a></li>"""
-            index_html = """<li class="item {}"><a href="/{}/?current_page={}">{}</a></li>"""
+            left_right_html = """<li class="previous {}" ><a href="/{}/?current_page={}&kw={}"><span aria-hidden="true">{}</span></a></li>"""
+            index_html = """<li class="item {}"><a href="/{}/?current_page={}&kw={}">{}</a></li>"""
             content = "{} {} {}".format(
-                left_right_html.format('disabled' if current_page == pages[0] else '', template, current_page - 1,"&laquo;"),
+                left_right_html.format('disabled' if current_page == pages[0] else '', template, current_page - 1,
+                                       kw,"&laquo;"),
                 "".join([index_html.format(
-                    'active' if page_i == current_page else "", template, page_i, page_i) for page_i in pages]),
+                    'active' if page_i == current_page else "", template, page_i, kw,page_i) for page_i in pages]),
                 left_right_html.format('disabled' if current_page == pages[-1] else '', template,
-                                       current_page + 1, "&raquo;"),
+                                       current_page + 1,kw, "&raquo;"),
             )
             nav = nav_html.format(content)
             return nav
+
+        kw = request.GET.get('kw', None)
+        if kw:
+            self.total_count = models.UserInfo.objects.filter(username__contains=kw).count()
+        else:
+            self.total_count = models.UserInfo.objects.all().count()
+
         current_page = int(request.GET.get("current_page", 1))
         current_page, pages = self.get_pages(current_page)
-        user_list = models.UserInfo.objects.all()[
-                            (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
-        req_url="user_management_pages_back"
-        nav=create_nav(req_url,current_page,pages)
+        if kw:
+            user_list = models.UserInfo.objects.filter(username__contains=kw)[
+                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+        else:
+            user_list = models.UserInfo.objects.all()[
+                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+        req_url = "user_management_pages_back"
+        nav = create_nav(req_url, current_page, pages)
 
-        return render(request,"user_management_pages_back1.html",{'nav':nav,"user_list": user_list})
-
+        return render(request, "user_management_pages_back1.html", {'nav': nav, "user_list": user_list})
 
     def post(self, request):
         current_page = int(request.POST.get("current_page", 1))
