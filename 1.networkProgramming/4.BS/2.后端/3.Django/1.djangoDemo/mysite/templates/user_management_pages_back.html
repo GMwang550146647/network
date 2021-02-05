@@ -90,7 +90,7 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-<div class="container">
+<div class="container col-xs-10 col-xs-offset-1">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">User Infos</h3>
@@ -98,11 +98,19 @@
         <div class="panel-body">
             <div class="form-inline">
                 <form action="/user_management_pages_back/" method="get">
+                    <select name="search_field" id="search_field">
+                        <option value="username">UserName</option>
+                        <option value="password">Password</option>
+                        <option value="hobby">Hobby</option>
+                        <option value="normal">Normal</option>
+                    </select>
                     <input type="text" class="form-control" id="search" placeholder="Search" name="kw" value="{{ kw }}">
                     <button type="submit" class="btn btn-primary">Search User</button>
                     <button type="text" class="btn btn-success pull-right">Add User</button>
                 </form>
-
+                <script>
+                     $('#search_field').val('{{ search_field }}')
+                </script>
             </div>
             <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -216,7 +224,7 @@
                     <ul class="pagination">
                         {% if current_page != 1 %}
                             <li class="previous"><a
-                                    href="/user_management_pages_back/?current_page={{ current_page|add:"-1" }}&kw={{ kw }}">
+                                    href="/user_management_pages_back/?current_page={{ current_page|add:"-1" }}&kw={{ kw }}&search_field={{ search_field }}">
                                 <span aria-hidden="true">&laquo;</span></a>
                             </li>
                         {% else %}
@@ -225,15 +233,17 @@
                         {% for num in pages %}
                             {% if num == current_page %}
                                 <li class="item active"><a
-                                        href="/user_management_pages_back/?current_page={{ num }}&kw={{ kw }}">{{ num }}</a></li>
+                                        href="/user_management_pages_back/?current_page={{ num }}&kw={{ kw }}&search_field={{ search_field }}">{{ num }}</a>
+                                </li>
                             {% else %}
                                 <li class="item"><a
-                                        href="/user_management_pages_back/?current_page={{ num }}&kw={{ kw }}">{{ num }}</a></li>
+                                        href="/user_management_pages_back/?current_page={{ num }}&kw={{ kw }}&search_field={{ search_field }}">{{ num }}</a>
+                                </li>
                             {% endif %}
                         {% endfor %}
                         {% if current_page != max_page %}
                             <li class="next"><a
-                                    href="/user_management_pages_back/?current_page={{ current_page|add:"1" }}&kw={{ kw }}"><span
+                                    href="/user_management_pages_back/?current_page={{ current_page|add:"1" }}&kw={{ kw }}&search_field={{ search_field }}"><span
                                     aria-hidden="true">&raquo;</span></a></li>
                         {% else %}
                             <li class="next disabled"><a href="#"><span aria-hidden="true">&raquo;</span></a></li>

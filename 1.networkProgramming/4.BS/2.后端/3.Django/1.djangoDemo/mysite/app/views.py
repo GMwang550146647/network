@@ -402,10 +402,12 @@ class UserManagementPagesBack(View):
         half_page = self.num_display_pages // 2
         if current_page > num_max_pages - (self.num_display_pages - half_page):
             current_page = min(num_max_pages, current_page)
+            current_page = max(1, current_page)
             page_right = num_max_pages
             page_left = max(1, num_max_pages - self.num_display_pages + 1)
         elif current_page < 1 + half_page:
             current_page = max(1, current_page)
+            current_page = min(num_max_pages, current_page)
             page_left = 1
             page_right = min(num_max_pages, self.num_display_pages)
         else:
@@ -414,29 +416,37 @@ class UserManagementPagesBack(View):
         pages = list(range(page_left, page_right + 1))
         return current_page, pages
 
-    def get(self, request):
-        """
-        非封装版本，navigation 写在html里面
-        :param request:
-        :return:
-        """
-        kw = request.GET.get('kw', "")
-        if kw:
-            self.total_count = models.UserInfo.objects.filter(username__contains=kw).count()
-        else:
-            self.total_count = models.UserInfo.objects.all().count()
-        current_page = int(request.GET.get("current_page", 1))
-        current_page, pages = self.get_pages(current_page)
-        num_max_pages = math.ceil(self.total_count / self.num_display_users)
-        if kw:
-            user_list = models.UserInfo.objects.filter(username__contains=kw)[
-                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
-        else:
-            user_list = models.UserInfo.objects.all()[
-                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
-        return render(request, "user_management_pages_back.html",
-                      {"user_list": user_list, "pages": pages, "current_page": current_page,
-                       "max_page": num_max_pages,"kw":kw})
+    # def get(self, request):
+    #     """
+    #     非封装版本，navigation 写在html里面
+    #     :param request:
+    #     :return:
+    #     """
+    #     kw = request.GET.get('kw', "")
+    #     search_field = request.GET.get('search_field', "")
+    #     if kw:
+    #         self.total_count = models.UserInfo.objects.filter(**{search_field + "__contains": kw}).count()
+    #     else:
+    #         self.total_count = models.UserInfo.objects.all().count()
+    #     logging.warning("Total Num: {}".format(self.total_count))
+    #
+    #     if self.total_count == 0:
+    #         user_list = []
+    #         current_page, pages = 1, [1]
+    #         num_max_pages = 1
+    #     else:
+    #         current_page = int(request.GET.get("current_page", 1))
+    #         current_page, pages = self.get_pages(current_page)
+    #         num_max_pages = math.ceil(self.total_count / self.num_display_users)
+    #         if kw:
+    #             user_list = models.UserInfo.objects.filter(**{search_field + "__contains": kw})[
+    #                         (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+    #         else:
+    #             user_list = models.UserInfo.objects.all()[
+    #                         (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+    #     return render(request, "user_management_pages_back.html",
+    #                   {"user_list": user_list, "pages": pages, "current_page": current_page,
+    #                    "max_page": num_max_pages, "kw": kw, "search_field": search_field})
 
     def get(self, request):
         """
@@ -445,39 +455,71 @@ class UserManagementPagesBack(View):
         :return:
         """
 
-        def create_nav(template, current_page, pages):
+        def create_nav(template, current_page, pages, query_dict):
+            query_dict['current_page']='{}'
+            print(query_dict)
+            query_string="&".join([f'{key}={val}' for key,val in query_dict.items()])
+            print(query_string)
             nav_html = """<nav aria-label="Page navigation"><ul class="pagination">{}</ul></nav>"""
-            left_right_html = """<li class="previous {}" ><a href="/{}/?current_page={}&kw={}"><span aria-hidden="true">{}</span></a></li>"""
-            index_html = """<li class="item {}"><a href="/{}/?current_page={}&kw={}">{}</a></li>"""
+            left_right_html = """<li class="previous {}" ><a href="/{}/?{}"><span aria-hidden="true">{}</span></a></li>"""
+            index_html = """<li class="item {}"><a href="/{}/?{}">{}</a></li>"""
             content = "{} {} {}".format(
-                left_right_html.format('disabled' if current_page == pages[0] else '', template, current_page - 1,
-                                       kw,"&laquo;"),
+                left_right_html.format('disabled' if current_page == pages[0] else '', template,
+                                       query_string.format(current_page - 1), "&laquo;"),
                 "".join([index_html.format(
-                    'active' if page_i == current_page else "", template, page_i, kw,page_i) for page_i in pages]),
+                    'active' if page_i == current_page else "", template,query_string.format(page_i) , page_i) for page_i
+                    in pages]),
                 left_right_html.format('disabled' if current_page == pages[-1] else '', template,
-                                       current_page + 1,kw, "&raquo;"),
+                                       query_string.format(current_page + 1), "&raquo;"),
             )
             nav = nav_html.format(content)
             return nav
 
+        from django.http import QueryDict
+        d = QueryDict(mutable=True)
+        d['a'] = 'web/a=a&b=b'
+        print(d.urlencode())
+        import copy
+        # query_dict = copy.deepcopy(request.GET) # copy 才能修改
+        query_dict = request.GET.copy() # copy 才能修改
         kw = request.GET.get('kw', None)
+        search_field = request.GET.get('search_field', "")
+        # 方法1 ： 这个只能and
+        q_obj = {search_field + "__contains": kw}
+        # 方法二： or 跟 and
+        from django.db.models import Q
+        q_obj = Q()
+        # Q.connector='or'  #-> 默认是 'and'
+        q_obj.children.append((search_field + "__contains", kw))
+        # q_obj.children.append((search_field1,kw1))
         if kw:
-            self.total_count = models.UserInfo.objects.filter(username__contains=kw).count()
+            # self.total_count = models.UserInfo.objects.filter(**q_obj).count()
+            self.total_count = models.UserInfo.objects.filter(q_obj).count()
         else:
             self.total_count = models.UserInfo.objects.all().count()
-
-        current_page = int(request.GET.get("current_page", 1))
-        current_page, pages = self.get_pages(current_page)
-        if kw:
-            user_list = models.UserInfo.objects.filter(username__contains=kw)[
-                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+        logging.warning("Total Num: {}".format(self.total_count))
+        if self.total_count == 0:
+            current_page, pages = 1, [1]
+            user_list = []
         else:
-            user_list = models.UserInfo.objects.all()[
-                        (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
-        req_url = "user_management_pages_back"
-        nav = create_nav(req_url, current_page, pages)
+            current_page = int(request.GET.get("current_page", 1))
+            current_page, pages = self.get_pages(current_page)
+            if kw:
 
-        return render(request, "user_management_pages_back1.html", {'nav': nav, "user_list": user_list})
+                # user_list = models.UserInfo.objects.filter(**q_obj)[
+                #             (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+
+                user_list = models.UserInfo.objects.filter(q_obj)[
+                            (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+
+            else:
+                user_list = models.UserInfo.objects.all()[
+                            (current_page - 1) * self.num_display_users:current_page * self.num_display_users]
+        req_url = "user_management_pages_back"
+        nav = create_nav(req_url, current_page, pages, query_dict)
+
+        return render(request, "user_management_pages_back1.html",
+                      {'nav': nav, "user_list": user_list, "kw": kw, "search_field": search_field})
 
     def post(self, request):
         current_page = int(request.POST.get("current_page", 1))
