@@ -52,7 +52,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #自定义中间件
     # "utils.middlewares.MyMiddleware"
-    "utils.middlewares.SessionAuth"
+    "utils.middlewares.SessionAuth",
+    "utils.middlewares.PermissionAuth"
 ]
 
 ROOT_URLCONF = 'mysite.urls'

@@ -53,9 +53,28 @@ class UserInfo(models.Model):
     password = models.CharField(max_length=30)
     hobby = models.CharField(max_length=60)
     normal = models.CharField(max_length=30, default='No')
+    roles = models.ManyToManyField(to='Role')
 
     def __str__(self):
         s = f"Id: {self.id}; Username: {self.username}; Password: {self.password}; Hobby: {self.hobby}; Normal: {self.normal};"
+        return s
+
+
+class Permission(models.Model):
+    url = models.CharField(max_length=32)
+    title = models.CharField(max_length=32)
+
+    def __str__(self):
+        s = f"url: {self.url}; title: {self.title};"
+        return s
+
+
+class Role(models.Model):
+    name = models.CharField(max_length=12)
+    permission = models.ManyToManyField(to='Permission')
+
+    def __str__(self):
+        s = f"name: {self.name};"
         return s
 
 
@@ -159,6 +178,8 @@ def user_add(username, password, hobby, normal):
 
 def user_login(username, password):
     users = UserInfo.objects.filter(username=username, password=password)
+    user=users[0]
+    print(user.roles.values("permission__url").distinct())
     return True if users else False
 
 
