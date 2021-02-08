@@ -23,7 +23,7 @@ def filter(value, target_value, keep_if_match=True, match_type='any', regex=Fals
             logging.error(f"Filter Error ->  Value: {value}  Details : {err}")
     if type(value) in [list, tuple]:
         if regex:
-            keep_flags = [[len(re.findall(tar_i, val_i)) >= 0 for val_i in value] for tar_i in target_value]
+            keep_flags = [[len(re.findall(tar_i, val_i)) > 0 for val_i in value] for tar_i in target_value]
             keep_flag = np.array(keep_flags).all() if match_type == 'all' else np.array(keep_flags).any()
         else:
             if match_type == 'all':
@@ -54,7 +54,7 @@ class SessionAuth(MiddlewareMixin):
     def process_request(self, request):
         # 设置全局登录验证设置白名单
         white_list = [reverse('login'), '/admin/', '/admin/login/', '/get_check_code/', '/signup/']
-        if filter(request.path, white_list):
+        if filter(request.path, white_list,regex=True):
             return None
         is_login = request.session.get('is_login', False)
         if is_login:
@@ -75,19 +75,24 @@ class SessionAuth(MiddlewareMixin):
 class PermissionAuth(MiddlewareMixin):
 
     def process_request(self, request):
+        all_urls=['/user_management/','/user_management_pages_back/','/user_management_pages_back/','/book_system_ajax/']
         if request.session.get('is_login', False):
             auth_urls = [urli['url'] for urli in models.Permission.objects.all().values('url').distinct()]
-            if filter([request.path], auth_urls):
+            if filter([request.path], auth_urls,regex=True):
                 username = request.session.get('username', "None")
                 users = models.UserInfo.objects.filter(username=username)
                 if users:
                     user = users[0]
                     # 需要等级认证的url
-                    if np.array([re.search(pattern_i, request.path) for pattern_i in auth_urls]).any():
+                    if filter([request.path],auth_urls,regex=True):
                         # 该用户拥有的url权限
                         legal_urls = [urli['permission__url'] for urli in
                                       user.roles.values("permission__url").distinct()]
-                        if filter([request.path], legal_urls):
+                        print(filter(['book_system_ajax'],legal_urls,regex=True))
+                        print(legal_urls)
+                        request.session['menu_list']=[urli for urli in all_urls if filter([urli],legal_urls,regex=True)]
+                        print(request.session['menu_list'])
+                        if filter([request.path], legal_urls,regex=True):
                             return None
                         else:
                             return HttpResponse("You Are Not Authorized To Browse This Page!")
