@@ -63,11 +63,18 @@ class UserInfo(models.Model):
 class Permission(models.Model):
     url = models.CharField(max_length=32)
     title = models.CharField(max_length=32)
+    menus=models.ForeignKey('Menu',null=True,blank=True,on_delete=models.CASCADE)
 
     def __str__(self):
         s = f"url: {self.url}; title: {self.title};"
         return s
 
+class Menu(models.Model):
+    url=models.CharField(max_length=32)
+    title=models.CharField(max_length=32)
+    def __str__(self):
+        s = f"url: {self.url}; title: {self.title};"
+        return s
 
 class Role(models.Model):
     name = models.CharField(max_length=12)

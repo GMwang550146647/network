@@ -1,5 +1,42 @@
 import random
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+import re
+import logging
+import json
+import numpy as np
+
+def filter(value, target_value, keep_if_match=True, match_type='any', regex=False):
+    """
+    To tell 'value' match target_value or not !
+    :param value:           The value to be tested,it can be list, tuple or string
+    :param target_value:    target value, list of items or regex(if regex=True)
+    :param keep_if_match:   keep if 'value' match the conditions in 'target_value'
+    :param match_type:      all-> all of the patterns in target_value should be match; any-> at least one match
+    :param regex:           if the items in target_value should be regarded as regex expression
+    :return:
+    """
+    if type(value) == str and value.strip()[0] in ['(', '[']:
+        try:
+            value = json.loads(value)
+        except Exception as err:
+            logging.error(f"Filter Error ->  Value: {value}  Details : {err}")
+    if type(value) in [list, tuple]:
+        if regex:
+            keep_flags = [[len(re.findall(tar_i, val_i)) > 0 for val_i in value] for tar_i in target_value]
+            keep_flag = np.array(keep_flags).all() if match_type == 'all' else np.array(keep_flags).any()
+        else:
+            if match_type == 'all':
+                keep_flag = (len(set(value) & set(target_value)) == len(set(target_value)))
+            else:
+                keep_flag = len(set(value) & set(target_value)) > 0
+    else:
+        if regex:
+            keep_flags = [len(re.findall(target_value_i, value)) > 0 for target_value_i in target_value]
+            keep_flag = np.array(keep_flags).all() if match_type == 'all' else np.array(keep_flags).any()
+        else:
+            keep_flag = value in target_value
+    # if keep_if_match==True : rowi is kept when "condition" in "condition ^ keep_if_match" is False
+    return (not keep_flag) ^ keep_if_match
 
 
 class CheckCode():
@@ -73,4 +110,3 @@ class CheckCode():
         with open(save_file, 'wb') as f:  # f是写入磁盘的文件句柄
             img.save(f, format='png')
         return code
-
