@@ -22,6 +22,6 @@ urls = {
 for namei, args in urls.items():
     response = requests.get(args['url'], params=args['params'],headers=args['headers'])
     content = response.text
-    save_file = os.path.join('download_html', f'{namei}.html')
+    save_file = os.path.join('download', f'{namei}.html')
     with open(save_file, 'w') as f:
         f.write(content)
