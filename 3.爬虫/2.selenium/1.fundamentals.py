@@ -7,7 +7,7 @@
 """
 import time
 from selenium import webdriver
-
+from PIL import Image
 """
 1.打开浏览器并输入网址
 """
@@ -49,4 +49,4 @@ video_url = driver.find_element_by_xpath('//*[@id="a1"]/div[2]/video')
 print(video_url.value_of_css_property('src'))
 
 # 4.拖动页面
-driver.execute("window.scrollTo(0,document.body.scrollHeight)")
+driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
