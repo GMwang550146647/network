@@ -1,4 +1,4 @@
-# Scrapy settings for scrapydemo project
+# Scrapy settings for huya project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,17 +7,18 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'scrapydemo'
+BOT_NAME = 'huya'
 
-SPIDER_MODULES = ['scrapydemo.spiders']
-NEWSPIDER_MODULE = 'scrapydemo.spiders'
+SPIDER_MODULES = ['huya.spiders']
+NEWSPIDER_MODULE = 'huya.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'scrapydemo (+http://www.yourdomain.com)'
+#USER_AGENT = 'huya (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
+LOG_LEVEL='ERROR'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -45,13 +46,13 @@ ROBOTSTXT_OBEY = False
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'scrapydemo.middlewares.ScrapydemoSpiderMiddleware': 543,
+#    'huya.middlewares.HuyaSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'scrapydemo.middlewares.ScrapydemoDownloaderMiddleware': 543,
+#    'huya.middlewares.HuyaDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -63,8 +64,9 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   #只会提交给优先级最高的管道类
-   'scrapydemo.pipelines.ScrapydemoPipeline': 300, #300表示优先级
+   'huya.pipelines.HuyaPipeline': 300,
+   'huya.pipelines.mysqlPipeLine':301,
+   'huya.pipelines.RedisPipeLine':302,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

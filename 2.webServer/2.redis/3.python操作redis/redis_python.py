@@ -30,5 +30,7 @@ try:
     )
     r.set('gmwang','feifei')
     print(r.get('gmwang'))
+    print(r.lrange('huyaList',2,10))
+
 except Exception as e:
     print("Cluster Connection Error:{}".format(str(e)))
