@@ -4,7 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from scrapy.http import HtmlResponse
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 import random
@@ -103,8 +103,8 @@ class IptestDownloaderMiddleware:
         # Called for each request that goes through the downloader
         # middleware.
         request.headers['User-Agent']=get_ua()
-        # request.meta['proxy']=
-        request.meta['timestamp']='2021-03-04T14:13:51Z@5c4d79f24d5df1d9fbe96a3cb9a02f58'
+        # request.meta['proxy'] = '43.243.166.222:8080'
+        # request.meta['timestamp']='2021-03-05T07:21:26Z@46f5c022e24c46e819c1ccea0dbdc6a3'
         # Must either:
         # - return None: continue processing this request
         # - or return a Response object
@@ -122,12 +122,18 @@ class IptestDownloaderMiddleware:
         :return:
         """
         # Called with the response returned from the downloader.
-
+        if request.url=='https://apis.baidu.com/store/aladdin/land?cardType=ipSearch':
+            driver=spider.web_driver
+            driver.get(request.url)
+            page_source=driver.page_source
+            new_reponse=HtmlResponse(url=request.url,body=page_source,encoding='utf-8',request=request)
+            return new_reponse
+        else:
+            return response
         # Must either;
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
-        return response
 
     def process_exception(self, request, exception, spider):
         """
@@ -139,7 +145,7 @@ class IptestDownloaderMiddleware:
         """
         # Called when a download handler or a process_request()
         # (from other downloader middleware) raises an exception.
-
+        print(request)
         # Must either:
         # - return None: continue processing this exception
         # - return a Response object: stops process_exception() chain

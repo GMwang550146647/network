@@ -19,7 +19,6 @@ NEWSPIDER_MODULE = 'iptest.spiders'
 ROBOTSTXT_OBEY = False
 # LOG_LEVEL = 'WARNING'
 DEFAULT_REQUEST_HEADERS = {
-    'timestamp': '2021-03-04T14:13:51Z@5c4d79f24d5df1d9fbe96a3cb9a02f58',
     'user-agent': 'Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',
 }
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15'
