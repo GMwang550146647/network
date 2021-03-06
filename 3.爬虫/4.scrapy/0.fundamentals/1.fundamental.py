@@ -49,9 +49,20 @@ scrapy集成的功能
                 yield scrapy.Request(url,callback)
             手动请求发送（post请求）
                 yield scrapy.FormRequest(url,formdata,callback):formdata是请求参数
-    6.分布式（几乎不用）： redis
-    7.请求传参机制
-    8.scrapy中合理应用selenium
+    6.分布式（几乎不用）： redis(from scrapy_redis.spiders import RedisCrawlSpider)
+        原生的scrapy框架是不可以实现分布式的
+            因为调度器不被共享
+            管道不可以被共享
+        如何实现分布式
+            scrapy+scrapy_redis实现分布式
+        scrapy-redis组件作用是什么 (pip install scrapy-redis)
+            可以提供共享的调度器和管道
+            特性：数据只可以存储到redis数据库
+
+    7.增量式
+
+    8.请求传参机制
+    9.scrapy中合理应用selenium
 
 scrapy核心组件
                  调度器
@@ -83,7 +94,16 @@ scrapy核心组件
     scrapy startproject scrapydemo
 2.创建爬虫文件
     cd scrapydemo
-    scrapy genspider example www.xxx.com
+    普通spider
+        scrapy genspider example www.xxx.com
+    特殊spider
+        scrapy genspider -t crawl spiderName www.xxx.com
+    Redis Spider
+    
+        scrapy genspider -t 
 3.执行爬虫
     scrapy crawl example
+"""
+"""
+注意： tbody不能在xpath 中
 """
