@@ -60,7 +60,9 @@ scrapy集成的功能
             特性：数据只可以存储到redis数据库
 
     7.增量式
-
+        获取网站更新后的信息
+        核心：
+            去重（redis set)
     8.请求传参机制
     9.scrapy中合理应用selenium
 
