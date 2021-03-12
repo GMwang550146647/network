@@ -5,13 +5,11 @@ class Solution():
     def __init__(self):
         pass
 
-    # @test_time
+    @test_time
     def isMatch_recur_record(self, s, p):
         """
         比较难的版本
         """
-
-        @test_time
         def dp(i=0, j=0):
             ###1.base case
             # pattern到头了，

@@ -31,7 +31,7 @@ class Solution():
         return len(d)
 
     def main(self):
-        nums = [10,9,2,5,3,1,4,7,101,18]
+        nums = [186,13,322,264,328,110,120,73,20,35,240,97,150,221,284,324,46,219,239,284,128,251,298,319,304,36,144,236,163,122]
         # self.lengthOfLIS(nums)
         self.lengthOfLIS1(nums)
 
