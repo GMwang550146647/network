@@ -36,27 +36,52 @@ class Solution():
         return max_score
 
     @test_time
+    def maxCoins_recur_record(self, nums):
+        '''
+        recur 全遍历版本
+        '''
+
+        def dp(i, j):
+            if i in [j - 1,j]:
+                return 0
+            elif (i, j) in dp_record:
+                return dp_record[(i, j)]
+            else:
+                max_k = -1
+                for k in range(i + 1, j):
+                    max_k = max(max_k, dp(i, k) + dp(k, j) + nums[i] * nums[j] * nums[k])
+                dp_record[(i, j)] = max_k
+                return max_k
+
+        nums = nums.copy()
+        nums.append(1)
+        nums.insert(0, 1)
+        dp_record = {}
+        return dp(0, len(nums)-1)
+
+    @test_time
     def maxCoins_dp(self, nums):
         # 初始化base case
-        nums=nums.copy()
+        nums = nums.copy()
         nums.insert(0, 1)
         nums.append(1)
         len_nums = len(nums)
-        dp = [[1 for _ in range(len_nums)] for _ in range(len_nums)]
-        for i in range(len_nums):
-            dp[i][i] = nums[i]
+        dp = [[0 for _ in range(len_nums)] for _ in range(len_nums)]
+        # for i in range(len_nums):
+        #     dp[i][i] = nums[i]
 
         # 转换方程 dp[i][j]=dp[i][k]+dp[k][j]+nums[i]*nums[j]*nums[k]
         # 从底往上遍历
-        for i in range(len_nums - 2, 0, -1):
+        for i in range(len_nums - 2, -1, -1):
             for j in range(i + 1, len_nums):
                 for k in range(i + 1, j):  # 之所以是i+1 -> j-1 是因为当j-k==1的时候不计算了，就是0（dp的默认值）
-                    dp[i][j]=max(dp[i][j],dp[i][k]+dp[k][j]+nums[i]*nums[k]*nums[j])
-        return dp[1][-1]
+                    dp[i][j] = max(dp[i][j], dp[i][k] + dp[k][j] + nums[i] * nums[k] * nums[j])
+        return dp[0][-1]
 
     def main(self):
         nums = [3, 1, 5, 8]
         self.maxCoins_recur(nums)
+        self.maxCoins_recur_record(nums)
         self.maxCoins_dp(nums)
 
 
