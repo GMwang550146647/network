@@ -19,6 +19,21 @@ class Solution():
         front_recur(root)
         return ','.join([str(num) for num in nums])
 
+    def front_deserialize(self, data):
+        def build_tree(nums):
+            if len(nums) == 0:
+                return None
+            else:
+                root = TreeNode(nums.pop(0))
+                if root.val == '#':
+                    return None
+                root.left = build_tree(nums)
+                root.right = build_tree(nums)
+                return root
+
+        nums = [int(num) if num != '#' else '#' for num in data.split(',')]
+        return build_tree(nums)
+
     def mid_serialize(self, root):
         def mid_recur(root):
             if root:
@@ -31,34 +46,6 @@ class Solution():
         nums = []
         mid_recur(root)
         return ','.join([str(num) for num in nums])
-
-    def back_serialize(self, root):
-        def back_recur(root):
-            if root:
-                back_recur(root.left)
-                back_recur(root.right)
-                nums.append(root.val)
-            else:
-                nums.append('#')
-
-        nums = []
-        back_recur(root)
-        return ','.join([str(num) for num in nums])
-
-    def front_deserialize(self, nums):
-        def build_tree(nums):
-            if len(nums) == 0:
-                return None
-            else:
-                if nums[0] == '#':
-                    return None
-                root = TreeNode(nums.pop(0))
-                root.left = build_tree(nums)
-                root.right = build_tree(nums)
-                return root
-
-        nums = [int(num) if num != '#' else '#' for num in nums.split(',')]
-        return build_tree(nums)
 
     def mid_deserialize(self, nums):
         """
@@ -73,20 +60,61 @@ class Solution():
         nums = [int(num) if num != '#' else '#' for num in nums.split(',')]
         return build_tree(nums)
 
-    def back_deserialize(self, nums):
+    def back_serialize(self, root):
+        def back_recur(root):
+            if root:
+                back_recur(root.left)
+                back_recur(root.right)
+                nums.append(root.val)
+            else:
+                nums.append('#')
+
+        nums = []
+        back_recur(root)
+        return ','.join([str(num) for num in nums])
+
+    def back_deserialize(self, data):
         def build_tree(nums):
             if len(nums) == 0:
                 return None
             else:
-                if nums[-1] == '#':
-                    return None
                 root = TreeNode(nums.pop(-1))
+                if root.val == '#':
+                    return None
                 root.right = build_tree(nums)
                 root.left = build_tree(nums)
 
                 return root
 
-        nums = [int(num) if num != '#' else '#' for num in nums.split(',')]
+        nums = [int(num) if num != '#' else '#' for num in data.split(',')]
+        return build_tree(nums)
+
+    def level_serialize(self, root):
+        nums = []
+        stack = [root]
+        while stack:
+            cur_node = stack.pop(0)
+            if cur_node is None:
+                nums.append('#')
+            else:
+                nums.append(cur_node.val)
+                stack.append(cur_node.left)
+                stack.append(cur_node.right)
+        return ','.join([str(num) for num in nums])
+
+    def level_deserialize(self, data):
+        root=TreeNode(data[0])
+        cur_index=+1
+        stack=[root]
+        while(stack):
+            len_level=len(stack)
+            tempt_data=data[cur_index:len_level*2+cur_index]
+            tempt_index=0
+            for i in range(len_level):
+                cur_node=stack.pop(0)
+                if tempt_index
+
+        nums = [int(num) if num != '#' else '#' for num in data.split(',')]
         return build_tree(nums)
 
     def main(self):
@@ -95,10 +123,13 @@ class Solution():
         Tree().mid_recur_tree(root)
         nums = self.front_serialize(root)
         root = self.front_deserialize(nums)
+        print(nums)
         # nums = self.mid_serialize(root)
         # root = self.mid_deserialize(nums)
         nums = self.back_serialize(root)
         root = self.back_deserialize(nums)
+        nums = self.level_serialize(root)
+        # root = self.back_deserialize(nums)
         print(nums)
 
 
