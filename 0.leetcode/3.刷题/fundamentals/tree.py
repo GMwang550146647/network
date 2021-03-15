@@ -17,10 +17,10 @@ class Tree():
         root.left=self.build_tree_from_list(tree_list,current_index=current_index*2+1)
         root.right=self.build_tree_from_list(tree_list,current_index=current_index*2+2)
         return root
-
-    def mid_recur_tree(self,root,depth=0):
+    @staticmethod
+    def mid_recur_tree(root,depth=0):
         if root is None:
             return None
-        self.mid_recur_tree(root.left,depth+1)
+        Tree.mid_recur_tree(root.left,depth+1)
         print('\t'*depth+str(root.val))
-        self.mid_recur_tree(root.right,depth+1)
+        Tree.mid_recur_tree(root.right,depth+1)
