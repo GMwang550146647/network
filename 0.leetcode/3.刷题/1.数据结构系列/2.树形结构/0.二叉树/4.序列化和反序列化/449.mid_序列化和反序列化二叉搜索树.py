@@ -104,34 +104,32 @@ class Solution():
 
     def level_deserialize(self, data):
         data = [int(num) if num != '#' else '#' for num in data.split(',')]
+        if data[0] == '#':
+            return None
         root = TreeNode(data[0])
-        cur_index = +1
+        # 队列存储的都是父节点
         stack = [root]
-        while (stack):
-            len_level = len(stack)
-            tempt_data = data[cur_index:len_level * 2 + cur_index]
-            cur_index = cur_index + len_level * 2
-            tempt_index = 0
-            for i in range(len_level):
-                cur_node = stack.pop(0)
-                new_node = TreeNode(tempt_data[tempt_index])
-                if tempt_index % 2 == 0:
-                    if tempt_data[tempt_index] == '#':
-                        cur_node.left = None
-                    else:
-                        cur_node.left = new_node
-                        stack.append(new_node)
-                else:
-                    if tempt_data[tempt_index] == '#':
-                        cur_node.right = None
-                    else:
-                        cur_node.right = new_node
-                        stack.append(new_node)
-            cur_index = cur_index + len_level * 2
+        cur_index = 1
+        while (cur_index < len(data)):
+            cur_node = stack.pop(0)
+            left_val = data[cur_index]
+            right_val = data[cur_index + 1]
+            if left_val != '#':
+                cur_node.left = TreeNode(left_val)
+                stack.append(cur_node.left)
+            else:
+                cur_node.left = None
+            if right_val != '#':
+                cur_node.right = TreeNode(right_val)
+                stack.append(cur_node.right)
+            else:
+                cur_node.right = None
+            cur_index += 2
+
         return root
 
     def main(self):
-        nums = [1, 2, 3, None, 4]
+        nums = []
         root = Tree().build_tree_from_list(nums)
         Tree().mid_recur_tree(root)
         nums = self.front_serialize(root)
@@ -145,6 +143,7 @@ class Solution():
         root = self.level_deserialize(nums)
         print(nums)
         Tree().mid_recur_tree(root)
+
 
 if __name__ == '__main__':
     SL = Solution()
