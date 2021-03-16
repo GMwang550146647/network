@@ -103,19 +103,32 @@ class Solution():
         return ','.join([str(num) for num in nums])
 
     def level_deserialize(self, data):
-        root=TreeNode(data[0])
-        cur_index=+1
-        stack=[root]
-        while(stack):
-            len_level=len(stack)
-            tempt_data=data[cur_index:len_level*2+cur_index]
-            tempt_index=0
+        data = [int(num) if num != '#' else '#' for num in data.split(',')]
+        root = TreeNode(data[0])
+        cur_index = +1
+        stack = [root]
+        while (stack):
+            len_level = len(stack)
+            tempt_data = data[cur_index:len_level * 2 + cur_index]
+            cur_index = cur_index + len_level * 2
+            tempt_index = 0
             for i in range(len_level):
-                cur_node=stack.pop(0)
-                if tempt_index
-
-        nums = [int(num) if num != '#' else '#' for num in data.split(',')]
-        return build_tree(nums)
+                cur_node = stack.pop(0)
+                new_node = TreeNode(tempt_data[tempt_index])
+                if tempt_index % 2 == 0:
+                    if tempt_data[tempt_index] == '#':
+                        cur_node.left = None
+                    else:
+                        cur_node.left = new_node
+                        stack.append(new_node)
+                else:
+                    if tempt_data[tempt_index] == '#':
+                        cur_node.right = None
+                    else:
+                        cur_node.right = new_node
+                        stack.append(new_node)
+            cur_index = cur_index + len_level * 2
+        return root
 
     def main(self):
         nums = [1, 2, 3, None, 4]
@@ -129,9 +142,9 @@ class Solution():
         nums = self.back_serialize(root)
         root = self.back_deserialize(nums)
         nums = self.level_serialize(root)
-        # root = self.back_deserialize(nums)
+        root = self.level_deserialize(nums)
         print(nums)
-
+        Tree().mid_recur_tree(root)
 
 if __name__ == '__main__':
     SL = Solution()
