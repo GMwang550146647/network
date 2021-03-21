@@ -39,6 +39,7 @@ class Solution():
         res = []
         i = 0
         while i < len(nums) - 2:
+            # 对于每一个数， 都在剩下的数里面抽两个 令其等于target - nums[i]
             res_i = self.twoSum_two_pointers(nums, target - nums[i], i + 1)
             if res_i:
                 res_i = [item + [nums[i]] for item in res_i]
@@ -52,20 +53,20 @@ class Solution():
     def n_sums(self, nums, target, n=4):
         def solve(nums, target, n, start=0):
             res = []
-            i=start
-            if target<0:
-                return []
-            if n < 2 or len(nums) < n:
+            i = start
+            len_nums = len(nums)
+            if n < 2 or len_nums < n:
                 return res
             if n == 2:
-                return self.twoSum_two_pointers(nums, target, i + 1)
+                res = self.twoSum_two_pointers(nums, target, i)
             else:
-                while i < len(nums) - n + 1:
+                while i < len_nums:
                     res_i = solve(nums, target - nums[i], n - 1, i + 1)
+
                     for res_i_j in res_i:
                         res_i_j.append(nums[i])
                         res.append(res_i_j)
-                    while (i < len(nums) - 1 and nums[i] == nums[i + 1]):
+                    while (i < len_nums - 1 and nums[i] == nums[i + 1]):
                         i += 1
                     i += 1
             return res
@@ -74,12 +75,12 @@ class Solution():
         return solve(nums, target, n)
 
     def main(self):
-        nums = [1,1,1,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5]
-        target = 9
+        nums = [-1,0,1,2,-1,-4]
+        target = -1
         result = self.twoSum_two_pointers(nums, target, sort=True)
         print(result)
         self.three_sums(nums, target)
-        self.n_sums(nums, target, 6)
+        self.n_sums(nums, target, 3)
 
 
 if __name__ == '__main__':

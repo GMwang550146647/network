@@ -23,7 +23,7 @@ class LinkList():
                 cur_node.next = recur_node
 
             self.root = head
-            return self
+        return self
 
     def show(self, head=None, limit=1000000):
         node = self.root if head is None else head

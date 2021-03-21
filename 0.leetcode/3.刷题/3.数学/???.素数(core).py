@@ -12,6 +12,9 @@ class Solution():
 
     @test_time
     def countPrimes(self, n):
+        """
+        从2 计算到 n**0.5
+        """
         def isPrime(n):
             i = 2
             while (i ** 2 <= n):
@@ -31,6 +34,9 @@ class Solution():
 
     @test_time
     def countPrimes_Sieve_of_Eratoshthenes(self, n):
+        """
+        从2 计算到 n**0.5，每找到一个素数，马上将其在n之前的倍数干掉！
+        """
         isPrime = [True for _ in range(n)]
         for i in range(2, math.ceil(n ** 0.5) + 1):
             if (isPrime[i]):
