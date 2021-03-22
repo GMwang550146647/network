@@ -1,5 +1,5 @@
 from fundamentals.test_time import test_time
-
+from collections import defaultdict
 
 class Solution():
     def __init__(self):
@@ -44,30 +44,31 @@ class Solution():
         m = len(board)
         n = len(board[0])
 
-        def dfs(x, y, index):
-            if index == len(word):
+        def dfs(x, y, index, wordi):
+            if index == len(wordi):
                 return True
+            tempt = board[x][y]
+            board[x][y] = '/'
             for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
                 nx, ny = x + dx, y + dy
-                if 0 <= nx < m and 0 <= ny < n and board[nx][ny] == word[index]:
-                    board[nx][ny] = '/'
-                    if dfs(nx, ny, index + 1):
+                if 0 <= nx < m and 0 <= ny < n and board[nx][ny] == wordi[index]:
+                    if dfs(nx, ny, index + 1, wordi):
                         return True
-                    board[nx][ny] = word[index]
+            board[x][y] = tempt
             return False
 
+        shot = defaultdict(list)
         for i in range(m):
             for j in range(n):
-                if board[i][j] == word[0]:
-                    board[i][j] = '/'
-                    if dfs(i, j, 1):
-                        return True
-                    board[i][j] = word[0]
+                shot[board[i][j]].append((i, j))
+        for i, j in shot[word[0]]:
+            if dfs(i, j, 1, word):
+                return True
         return False
 
     def main(self):
-        board = [["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]]
-        word = "ABCCED"
+        board = [["C","A","A"],["A","A","A"],["B","C","D"]]
+        word = "AAB"
 
         self.exist_simplified(board, word)
         self.exist_fast(board, word)
