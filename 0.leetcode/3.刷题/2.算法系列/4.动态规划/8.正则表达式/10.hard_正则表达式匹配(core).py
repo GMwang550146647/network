@@ -10,6 +10,7 @@ class Solution():
         """
         比较难的版本
         """
+
         def dp(i=0, j=0):
             ###1.base case
             # pattern到头了，
@@ -52,12 +53,10 @@ class Solution():
         dp_table = {}
         return dp()
 
-    def isMatch_dp(self, s, p):
-        pass
 
     def main(self):
-        s = "mississippi"
-        p = "mis*is*p*."
+        s = "ab"
+        p = ".*"
         self.isMatch_recur_record(s, p)
         self.isMatch_dp(s, p)
 

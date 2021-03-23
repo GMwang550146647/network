@@ -39,27 +39,32 @@ class Solution():
                 next = reverse(head.next)
                 next.next = cur
             else:
-                root=cur
+                root = cur
             return cur
+
         if not head:
             return None
-        root=None
+        root = None
         reverse(head)
-        head.next=None
+        head.next = None
         return root
+
     def reverseList_recur(self, head):
         """
         链表反转，递归法（优美版本，不过不快就是了）
         """
+
         def reverse(head):
-            #1.若head本来就是空的，返回空；如果head.next空了，说明这个是尾部，作为头部返回
+            # 1.若head本来就是空的，返回空；如果head.next空了，说明这个是尾部，作为头部返回
             if head is None or head.next is None:
                 return head
-            last=reverse(head.next)
-            head.next.next=head
-            head.next=None
+            last = reverse(head.next)
+            head.next.next = head
+            head.next = None
             return last
-        return  reverse(head)
+
+        return reverse(head)
+
     def main(self):
         nums = [1, 2, 3, 4, 5, 6]
         ll = LinkList().build_link_list(nums).root
