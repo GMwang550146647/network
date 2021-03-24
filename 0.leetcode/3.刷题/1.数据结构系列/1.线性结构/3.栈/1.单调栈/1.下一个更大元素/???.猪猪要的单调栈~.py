@@ -1,7 +1,9 @@
 import logging
+
 '''
 嘘~别说话，运行看输出就好~
 '''
+
 
 class ListNode():
     def __init__(self, val):
@@ -108,7 +110,39 @@ def nextGreaterElement(nums):
     return record
 
 
+def nextGreaterElement(nums):
+    """
+    用的是python的自带"栈" 可以随便用
+    """
+    stack = []
+    record = [0 for _ in range(len(nums))]
+    for i in range(len(nums) - 1, -1, -1):
+        while stack and stack[-1] <= nums[i]:
+            stack.pop()
+        record[i] = stack[-1] if stack else nums[i]
+        stack.append(nums[i])
+    return record
+def feifei_nextGreaterElement(arr):
+    stack=[]
+    stack.append(0)
+    result=[0 for _ in range(len(arr))]
+    for i in range(1,len(arr)):
+        while stack:
+            if arr[i]>arr[stack[-1]]:
+                pos=stack.pop()
+                result[pos]=arr[i]
+            else:
+                stack.append(i)
+                break
+        if not stack:
+            stack.append(i)
+    while stack:
+        pos=stack.pop()
+        result[pos]=arr[pos]
+    return result
+
 if __name__ == '__main__':
     nums = [3, 1, 2, 7, 4, 6]
-    my_nextGreaterElement(nums)
-    # nextGreaterElement(nums)
+    # my_nextGreaterElement(nums)
+    print(nextGreaterElement(nums))
+    print(feifei_nextGreaterElement(nums))

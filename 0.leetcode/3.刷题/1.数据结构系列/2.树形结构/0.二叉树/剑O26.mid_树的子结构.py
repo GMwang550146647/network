@@ -1,5 +1,4 @@
 from fundamentals.test_time import test_time
-from fundamentals.tree import Tree
 
 
 class Solution():
@@ -14,14 +13,16 @@ class Solution():
             elif not root1:
                 return False
             else:
-                return root1.val == root2.val and is_same_tree(root1.right, root2.right) \
-                       and is_same_tree(root1.left,root2.left)
+                return is_same_tree(root1.left, root2.left) and is_same_tree(root1.right, root2.right)
 
         def recur_tree(root1, root2):
             if not root1:
                 return False
             else:
-                return is_same_tree(root1, root2) or recur_tree(root1.left, root2) or recur_tree(root1.right, root2)
+                if root1.val == root2.val:
+                    return is_same_tree(root1, root2)
+                else:
+                    return recur_tree(root1.left, root2) or recur_tree(root1.right, root2)
 
         if not B:
             return False
@@ -29,16 +30,8 @@ class Solution():
             return recur_tree(A, B)
 
     def main(self):
-        nums1 = [4, 2, 3, 4, 5, 6, 7, 8, 9]
-        nums2 = [4, 8, 9]
-        root1 = Tree().build_tree_from_list(nums1)
-        root2 = Tree().build_tree_from_list(nums2)
-        print("#####################")
-        Tree().mid_recur_tree(root1)
-        print("#####################")
-        Tree().mid_recur_tree(root2)
-        print("#####################")
-        self.isSubStructure(root1, root2)
+        nums = [2, 7, 9, 3, 1]
+        self.isSubStructure(nums)
 
 
 if __name__ == '__main__':
