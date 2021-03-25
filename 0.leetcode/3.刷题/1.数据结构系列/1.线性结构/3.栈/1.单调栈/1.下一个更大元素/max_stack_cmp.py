@@ -81,7 +81,7 @@ class Solution():
         return record
 
     @test_time
-    def feifei_nextGreaterElement(self, arr):
+    def ff_nextGreaterElement(self, arr):
         stack = []
         stack.append(0)
         result = [0 for _ in range(len(arr))]
@@ -125,17 +125,17 @@ class Solution():
         # nums = np.random.rand(10000)
 
         nums = list(reversed(range(10000)))
-        self.feifei_nextGreaterElement(nums)
+        self.ff_nextGreaterElement(nums)
         self.nextGreaterElement(nums)
         # self.my_nextGreaterElement(nums)
         print("###########Nornal:##############")
         nums = list(range(10000))
-        self.feifei_nextGreaterElement(nums)
+        self.ff_nextGreaterElement(nums)
         self.nextGreaterElement(nums)
         # self.my_nextGreaterElement(nums)
         print("###########Random:##############")
         nums = np.random.rand(10000)
-        self.feifei_nextGreaterElement(nums)
+        self.ff_nextGreaterElement(nums)
         self.nextGreaterElement(nums)
 if __name__ == '__main__':
     SL = Solution()

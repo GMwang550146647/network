@@ -1,22 +1,27 @@
 from fundamentals.test_time import test_time
-'''
-1, 2, 3, 4,   5, 6,    8,    9, 10, 12    15  16      18     20    24     25   27    30
-   2  3  2x2  5  2x3 2x2x2 3x3 2x5 2x2x3 3x5 2x2x2x2 2x3x3 2x2x5 2x2x2x3 5x5  3x3x3  2x3x5
-'''
+
 
 class Solution():
     def __init__(self):
         pass
 
     @test_time
-    def func(self):
-        pass
+    def nthUglyNumber(self, n):
+        dp, a, b, c = [1] * n, 0, 0, 0
+        for i in range(1, n):
+            n2, n3, n5 = dp[a] * 2, dp[b] * 3, dp[c] * 5
+            dp[i] = min(n2, n3, n5)
+            if dp[i] == n2: a += 1
+            if dp[i] == n3: b += 1
+            if dp[i] == n5: c += 1
+        return dp[-1]
+
 
     def main(self):
-        self.func()
+        n = 10
+        self.nthUglyNumber(n)
 
 
 if __name__ == '__main__':
     SL = Solution()
     SL.main()
-    print()

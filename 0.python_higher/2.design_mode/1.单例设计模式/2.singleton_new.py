@@ -20,7 +20,7 @@ class Singleton():
         print(f'{self.x}: {self} activated this private function (only allow one obj use!)')
 
 
-def test_thread_safe(n=1):
+def thread_safe(n=1):
     ts = []
     for i in range(n):
         ti = Thread(target=Singleton, args=(i,))
@@ -29,12 +29,14 @@ def test_thread_safe(n=1):
     [ti.join() for ti in ts]
 
 
-def test_singleton():
+def singleton():
     '''
     1.测试单例模式是否正常运行
     '''
     a1 = Singleton(1)
     a2 = Singleton(2)
+    print(a1==a2)
+    print(a1 is a2)
     print(a1.x)
     print(a2.x)
 
@@ -52,8 +54,8 @@ def test_singleton():
 
 
 if __name__ == '__main__':
-    # test_singleton()
-    # test_thread_safe()
+    # singleton()
+    # thread_safe()
     k=Singleton(10)
     k1=k._instance
     k1.__init__(1000)
