@@ -4,6 +4,7 @@ suggestion:
 
 注意！
     super() 调用的不绝对是父类的对象！ 其实是上一个对象 例如这里的MailSender1 调用的是MailSender2的 对象！
+    顺序是 根据继承的从左往右执行！无论是创建还是super的时候都是这样！
 """
 
 
@@ -64,7 +65,7 @@ class MailSenderCombine(MailSender1, MailSender2):
         self.m_name = name
         self.email = email
         self._all_contact.append(self)
-        print('MailSenderCombine._all_contact:{}'.format(MailSender2._all_contact))
+        print('MailSenderCombine._all_contact:{}'.format(MailSenderCombine._all_contact))
 
     def send_mail(self, message):
         super().send_mail(message)
