@@ -8,7 +8,7 @@ class AudoFile:
         if not filename.endswith(self.ext):
             raise Exception("Invalid file format")
         self.filename = filename
-        self.play()
+        # self.play()
 
 
 class MP3File(AudoFile):
@@ -32,8 +32,22 @@ class OggFile(AudoFile):
         print("Playing {} as ogg".format(self.filename))
 
 
+class MyClass():
+    def play(self):
+        print("This is my class do whatever I want!")
+
+
 if __name__ == '__main__':
+    # 1.多态！ 他们都继承自一个类！所以相同类型的变量就能装一起！
     ogg = OggFile("myfile.ogg")
     mp3 = MP3File("myfile.mp3")
     wav = WavFile("myfile.wav")
-    ddd = WavFile("myfile.mp3")
+    movies = [ogg, mp3, wav]
+    for moviei in movies:
+        moviei.play()
+
+    #2.鸭子类型！ 不要求继承自一个类，只需要他们有同一个属性或者方法就行了！
+    mc=MyClass()
+    movies.append(mc)
+    for moviei in movies:
+        moviei.play()
