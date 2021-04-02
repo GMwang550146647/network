@@ -25,7 +25,7 @@ class Solution():
         return solutions
 
     def main(self):
-        s = "abc"
+        s = "abbc"
         self.permutation(s)
 
 
