@@ -5,14 +5,14 @@
       <sourceFolder url="file://$MODULE_DIR$/3.刷题/fundamentals" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/3.刷题" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.7.6 (/opt/anaconda3/python.app/Contents/MacOS/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
+    <option name="format" value="PLAIN" />
     <option name="myDocStringFormat" value="Plain" />
   </component>
   <component name="TestRunnerService">
-    <option name="projectConfiguration" value="pytest" />
     <option name="PROJECT_TEST_RUNNER" value="pytest" />
   </component>
 </module>
