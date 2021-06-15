@@ -81,7 +81,7 @@ class BinarySearchTree():
     def _show(self, node, nt=0):
         if node:
             self._show(node.left, nt + 1)
-            print('\t' * nt, node.key)
+            print('\t' * 2*nt, (node.key,node.balance))
             self._show(node.right, nt + 1)
 
     '''1.put:
@@ -133,7 +133,7 @@ class BinarySearchTree():
         if node.balance > 0:
             if node.left.balance < 0:
                 self.rotateLeft(node.left)
-            self.rotateLeft(node)
+            self.rotateRight(node)
         elif node.balance < 0:
             if node.right.balance > 0:
                 self.rotateRight(node.right)
@@ -185,8 +185,8 @@ class BinarySearchTree():
         # 1.4.3.newroot.right更新
         newRoot.right = rotRoot
         # 1.4.4.更新转换后的balance值
-        rotRoot.balance = rotRoot.balance - 1 - min(newRoot.balance, 0)
-        newRoot.balance = newRoot.balance - 1 + max(0, rotRoot.balance)
+        rotRoot.balance = rotRoot.balance - 1 - max(newRoot.balance, 0)
+        newRoot.balance = newRoot.balance - 1 + min(0, rotRoot.balance)
 
     '''2.get:
         功能：把key对应的值取出来，类似于字典的dict[key]
@@ -290,27 +290,29 @@ class BinarySearchTree():
 tr = BinarySearchTree()
 
 '''1.put测试'''
-for num in range(10):
-    tr[num] = num ** 2
+arr=[5,4,3,2,1]
+for num in arr:
+    tr[num] = num
     tr.show()
     print("***************")
-print("____________________")
-'''2.get测试'''
-print(6 in tr)
-print(tr[7])
-print("____________________")
-'''3.测试__iter__'''
-for key in tr:
-    print(key, ':', tr[key])
-print("____________________")
-
-'''4.测试__del__:删除时候的平衡因子没有说'''
-for item in range(0, 3):
-    del tr[item]
-    tr.show()
-    print("#############")
-tr[1] = 100
-tr.show()
-print("#############")
-tr.put(100,0)
-tr.show()
+# print("____________________")
+# '''2.get测试'''
+# print(6 in tr)
+# print(tr[7])
+# print("____________________")
+# '''3.测试__iter__'''
+# for key in tr:
+#     print(key, ':', tr[key])
+# print("____________________")
+#
+# '''4.测试__del__:删除时候的平衡因子没有说'''
+# for item in range(0, 3):
+#     del tr[item]
+#     tr.show()
+#     print("#############")
+# tr[1] = 100
+# tr.show()
+# print("#############")
+# for i in range(10):
+#     tr.put(i**2,i)
+# tr.show()

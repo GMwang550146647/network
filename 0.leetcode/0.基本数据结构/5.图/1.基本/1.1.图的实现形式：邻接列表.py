@@ -1,26 +1,23 @@
-class Graph():
-    def __init__(self):
-        pass
-
-    '''图中加入定点'''
-
-    def addVertex(self, vert):
-        pass
-
-    '''图中添加有向边（带权）'''
-
-    def addEdge(self, fromVert, toVert, weight=0):
-        pass
-
-    '''查找名称为vkey的定点'''
-
-    def getVertex(self, vkey):
-        pass
-
-    '''返回图中所有顶点列表'''
-
-    def getVertices(self):
-        pass
-
-    def __contains__(self, item):
-        pass
+import networkx as nx
+import matplotlib.pyplot as plt
+#将点之间的联系构造成如下矩阵N
+N = [[0, 3, 5, 1],
+ [1, 5, 4, 3],
+   [2, 1, 3, 5],
+   [3, 5, 1, 4],
+   [4, 5, 1, 3],
+   [5, 3, 4, 1],
+ [6, 3, 1, 4]]
+G=nx.Graph()
+point=[0,1,2,3,4,5,6]
+G.add_nodes_from(point)
+edglist=[]
+for i in range(7):
+    for j in range(1,4):
+        edglist.append((N[i][0],N[i][j]))
+G=nx.Graph(edglist)
+position = nx.circular_layout(G)
+nx.draw_networkx_nodes(G,position, nodelist=point, node_color="r")
+nx.draw_networkx_edges(G,position)
+nx.draw_networkx_labels(G,position)
+plt.show()
