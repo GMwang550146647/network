@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/1.networkProgramming/4.BS/2.后端/3.Django/1.djangoDemo/mysite" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/3.爬虫/4.scrapy/1.demo/scrapydemo/scrapydemo" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/0.leetcode/3.刷题" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/0.leetcode/3.刷题/fundamentals" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="myScript" level="application" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="Nosetests" />
+  </component>
+</module>

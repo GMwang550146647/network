@@ -86,6 +86,33 @@ class Solution():
 
         return reverseK(head, k)
 
+    def my_reverseKGroup(self, head, k):
+        # write code here
+        def reverse(h, k):
+            t = h
+            for i in range(k):
+                if not t:
+                    return h, None
+                t = t.next
+            pre, cur, next = None, h, h.next
+            for i in range(k):
+                cur.next = pre
+                pre, cur, next = cur, next, next.next if next else None
+            return pre, cur
+
+        pre_tail = None
+        cur = head
+        head = None
+        while cur:
+            new_head, next_node = reverse(cur, k)
+            if head is None:
+                head = new_head
+            if pre_tail:
+                pre_tail.next = new_head
+            pre_tail = cur
+            cur = next_node
+        return head
+
     def main(self):
         nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         k = 3
@@ -95,6 +122,8 @@ class Solution():
         LinkList().show(head)
         head = LinkList().build_link_list(nums).root
         head = self.reverseKGroup(head, k)
+        LinkList().show(head)
+        head = self.my_reverseKGroup(head, k)
         LinkList().show(head)
 
 

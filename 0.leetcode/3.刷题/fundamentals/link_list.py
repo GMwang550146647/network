@@ -3,6 +3,12 @@ class ListNode:
         self.val = x
         self.next = None
 
+    def show(self, limit=1000000):
+        while self and limit > 0:
+            print(self.val,end=' ')
+            self = self.next
+            limit -= 1
+        print()
 
 class LinkList():
     def __init__(self):
@@ -23,7 +29,7 @@ class LinkList():
                 cur_node.next = recur_node
 
             self.root = head
-        return self
+        return self.root
 
     def show(self, head=None, limit=1000000):
         node = self.root if head is None else head

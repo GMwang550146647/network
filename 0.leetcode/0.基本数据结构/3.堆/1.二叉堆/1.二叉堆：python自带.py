@@ -5,6 +5,7 @@ import heapq
 from random import shuffle
 
 lt = list(range(100))
+print(heapq.nlargest(5,lt))
 lt1 = list(range(99))
 shuffle(lt)
 heapq.heappush(lt1, 99)
