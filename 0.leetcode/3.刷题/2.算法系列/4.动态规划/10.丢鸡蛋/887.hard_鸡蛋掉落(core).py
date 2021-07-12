@@ -82,6 +82,8 @@ class Solution():
             m += 1
             for k_i in range(1, k + 1):
                 dp[k_i][m] = dp[k_i - 1][m - 1] + dp[k_i][m - 1] + 1
+        for k in dp:
+            print(k)
         return m
 
     def main(self):

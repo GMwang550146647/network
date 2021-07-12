@@ -1,31 +1,20 @@
 class Solution:
-    def LIS(self , arr ):
-        def gt(s1,s2):
-            if len(s1)==len(s2):
-                for i in range(len(s1)):
-                    if s1[i]>s2[i]:
-                        return False
-                return True
-            return len(s1)>len(s2)
-        def max_seq(arr):
-            result=arr[0]
-            for i in range(1,len(arr)):
-                result= arr[i] if gt(arr[i],result) else result
-            return result
+    def maximalSquare(self, matrix) -> int:
+        max_side=0
+        dp=[[0]*len(matrix[0]) for _ in range(len(matrix))]
 
-        # write code here
-        dp=[[ai] for ai in arr]
-        for i in range(1,len(arr)):
-            for j in range(i):
-                if dp[i]>dp[j]:
-                    new_seq=dp[j]+[arr[i]]
-                    if gt(new_seq,dp[i]):
-                        dp[i]=new_seq
-        return max_seq(dp)
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j]=='1':
+                    if i==0 or j==0:
+                        dp[i][j]=1
+                    else:
+                        dp[i][j]=min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1])+1
+                    max_side=max(dp[i][j],max_side)
+        return max_side**2
 
 
 if __name__ == '__main__':
-    arr = [2, 1, 5, 3, 6, 4, 8, 9, 7]
-
-    result = Solution().LIS(arr)
+    matrix=[["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+    result=Solution().maximalSquare(matrix)
     print(result)
